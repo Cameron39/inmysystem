@@ -5,6 +5,7 @@ In My System CSC 470 Final Project
 import toga
 from toga.style import Pack
 from toga.style.pack import COLUMN, ROW
+from toga import ImageView, Image
 
 
 class InMySystem(toga.App):
@@ -16,7 +17,10 @@ class InMySystem(toga.App):
         show the main window.
         """
         main_box = toga.Box()
-        
+        #self.photo = toga.ImageView(height=1280, width=924, margin = 5)
+        # main_box.add(self.photo)
+        bck_image = toga.ImageView(toga.Image('./resources/background1.png'))
+        main_box.add(bck_image)
 
         self.main_window = toga.MainWindow(title=self.formal_name)
         self.main_window.content = main_box
