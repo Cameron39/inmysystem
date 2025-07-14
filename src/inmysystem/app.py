@@ -19,7 +19,8 @@ class InMySystem(toga.App):
         main_box = toga.Box()
         #self.photo = toga.ImageView(height=1280, width=924, margin = 5)
         # main_box.add(self.photo)
-        bck_image = toga.ImageView(toga.Image('./resources/background1.png'))
+        bck_image = toga.ImageView(toga.Image('./resources/background1.png'), height=250)
+        #bck_image.
         main_box.add(bck_image)
 
         self.main_window = toga.MainWindow(title=self.formal_name)
