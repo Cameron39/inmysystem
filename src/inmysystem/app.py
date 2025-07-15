@@ -3,6 +3,7 @@ In My System CSC 470 Final Project
 """
 
 import toga
+import dataRead
 from toga.style import Pack
 from toga.style.pack import COLUMN, ROW, CENTER, Pack
 from toga import ImageView, Image
