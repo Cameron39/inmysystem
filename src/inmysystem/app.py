@@ -18,6 +18,7 @@ class InMySystem(toga.App):
         show the main window.
         """
         self.jsonFileHanlder = JsonFileHandler(self.paths)
+        # jsonData = self.jsonFileHanlder.readData("testInfo.json")
         jsonData = self.jsonFileHanlder.readTestFile()
 
         self.main_box = toga.Box(
@@ -41,7 +42,7 @@ class InMySystem(toga.App):
             flex=1,
             margin=5)
 
-        self.dose_info.value = jsonData
+        self.dose_info.value = self.jsonFileHanlder.makeJSONPretty(jsonData)
         # bck_image = toga.ImageView(toga.Image('./resources/background2.png'),
         #                            style=Pack(flex=1,
         #                            align_items=CENTER,

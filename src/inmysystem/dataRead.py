@@ -9,21 +9,24 @@ class JsonFileHandler:
 
     def readTestFile(self) -> dict:
         testFile = "testInfo.json"
+        return self.readData(testFile)
+        
+    def readData(self, file2Read) -> dict:
+        fileWithPath = self._app_paths.app / "resources" / file2Read
 
-        # fileName = app_path \ "resources" \ testFile
-        full_path = self._app_paths.app / "resources" / testFile
-        fileName = full_path
+        # print(f"File2Read in use with file: {file2Read} and {fileWithPath}")
 
-        if not fileName.exists():
-            raise FileNotFoundError(f"File Not Found: {fileName}")
-
+        if not fileWithPath.exists():
+            raise FileNotFoundError(f"File Not Found: {fileWithPath}")
         try:
-            json_text = fileName.read_text(encoding="utf-8")
-            json_data = json.loads(json_text)
-            return json_data
-            
+            jsonText = fileWithPath.read_text(encoding="utf-8")
+            jsonData = json.loads(jsonText)
+            return jsonData     
         except json.JSONDecodeError:
-            raise json.JSONDecoder(f"Error with JSON decoding: {fileName}")
+            raise json.JSONDecoder(f"Error with JSON decoding: {fileWithPath}")
         except Exception as e:
-            raise Exception(f"Unexpected error while reading {fileName}")
+            raise Exception(f"Unexpected error while reading {fileWithPath}")
+        
+    def makeJSONPretty(self, jsonData: dict) ->str:
+        return json.dumps(jsonData, indent=2)
     
