@@ -16,22 +16,23 @@ class InMySystem(toga.App):
         We then create a main window (with a name matching the app), and
         show the main window.
         """
-        main_box = toga.Box(
+        self.main_box = toga.Box(
             style=Pack(
-                margin=5,
+                margin=20,
                 align_items=CENTER,
                 direction=COLUMN,
-                width = 435,
-                height = 640,
+                # width = 435,
+                # height = 640,
             )
         )
 
-        add_button = toga.Button(
+        self.add_button = toga.Button(
             "Add Dose",
             on_press= self.add_dose,
             margin=5,
         )
         
+        self.dose_info = toga.MultilineTextInput(readonly=True)
 
         # bck_image = toga.ImageView(toga.Image('./resources/background2.png'),
         #                            style=Pack(flex=1,
@@ -40,9 +41,11 @@ class InMySystem(toga.App):
         #                            height = 640,)
         #                            )
         # main_box.add(bck_image)
+        self.main_box.add(self.add_button)
+        self.main_box.add(self.dose_info)
 
         self.main_window = toga.MainWindow(title=self.formal_name)
-        self.main_window.content = main_box
+        self.main_window.content = self.main_box
         self.main_window.show()
 
     def add_dose(self):

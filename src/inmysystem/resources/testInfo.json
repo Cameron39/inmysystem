@@ -1,0 +1,23 @@
+[
+  {
+    "Name": "Ibuprofen",
+    "Nickname": "Motrin, Advil",
+    "Dose": "200mg",
+    "ActiveTime": "240",
+    "Notes": "Take with Food"
+  },
+  {
+    "Name": "Acetaminophen",
+    "Nickname": "Tylenol",
+    "Dose": "1000mg",
+    "ActiveTime": "360",
+    "Notes": "Take with Food"
+  },
+  {
+    "Name": "Diphenhydramine ",
+    "Nickname": "Benadryl",
+    "Dose": "200mg",
+    "ActiveTime": "240",
+    "Notes": "May make you drowsey"
+  }
+]
