@@ -1,4 +1,5 @@
 import json
+import pprint
 from pathlib import Path
 
 class JsonFileHandler:
@@ -28,5 +29,7 @@ class JsonFileHandler:
             raise Exception(f"Unexpected error while reading {fileWithPath}")
         
     def makeJSONPretty(self, jsonData: dict) ->str:
-        return json.dumps(jsonData, indent=2)
+        # return json.dumps(jsonData, indent=4)
+        # return pprint.pprint(jsonData, sort_dicts=False)
+        return pprint.pformat(jsonData, sort_dicts=False)
     
