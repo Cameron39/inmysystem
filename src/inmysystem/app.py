@@ -19,9 +19,10 @@ class InMySystem(toga.App):
         We then create a main window (with a name matching the app), and
         show the main window.
         """
-        self.jsonHandler = JsonFileHandler(self.paths)
+        # self.jsonHandler = JsonFileHandler(self.paths)
         # jsonData = self.jsonFileHanlder.readData("testInfo.json")
-        jsonData = self.jsonHandler.readTestFile()
+        # jsonData = self.jsonHandler.readTestFile()
+        # TODO: switch to doseHandler!
         self._activeDoses = []
 
         self.initialData = ListSource( # THIS WORKS!
@@ -64,7 +65,6 @@ class InMySystem(toga.App):
         # print(f"Value: {item}")
         self.dose_info = toga.MultilineTextInput(readonly=True,
             placeholder="Future Information",
-            value=jsonData,
             flex=1,
             margin=5)
         

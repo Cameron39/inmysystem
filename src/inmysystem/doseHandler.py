@@ -11,13 +11,17 @@ from inmysystem.dataRead import JsonFileHandler
 class doseHandler():
     def __init__(self, appPath):
         self._appPath = appPath
-        self.detailDose = detailDose = []
-        self.simpleDose = simpleDose = []
-        self.activeDose = activeDose = []
+        self.detailDose = []
+        self.simpleDose = []
+        self.activeDose = []
         self.dataFile = "testInfo.json"
 
     def getDoseInfo(self):
-        pass
+        JHandler = JsonFileHandler(self._appPath)
+        tempdata = JHandler.readData(self.dataFile)
+
+        if (bool(tempdata)):
+            self.parseDoseInfo(tempdata)
 
     def parseDoseInfo(self, jsonData):
         if len(jsonData) == 0: return
@@ -26,12 +30,12 @@ class doseHandler():
             self.detailDose.append(dosage) 
             self.simpleDose.append(dosage["Name"])
 
-    def getSimpleDose(self):
-        pass
+    def getSimpleDose(self) -> dict:
+        return self.simpleDose
 
-    def getDetailDose(self):
-        pass
+    def getDetailDose(self) -> list:
+        return self.detailDose
     
-    async def checkActiveDose(self):
+    async def checkActiveDose(self) -> list:
         pass
 
