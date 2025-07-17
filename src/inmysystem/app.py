@@ -22,6 +22,7 @@ class InMySystem(toga.App):
         self.jsonHandler = JsonFileHandler(self.paths)
         # jsonData = self.jsonFileHanlder.readData("testInfo.json")
         jsonData = self.jsonHandler.readTestFile()
+        self._activeDoses = []
 
         self.initialData = ListSource( # THIS WORKS!
             data=[
@@ -94,6 +95,7 @@ class InMySystem(toga.App):
         self.addNewDose(result)
 
     def addNewDose(self, nextDose):
+        # TODO: Indicate if the time is for the current day or tomorrow!
         detailedDose = self.jsonHandler.getDetailDose()
         newDose = next(filter(lambda v: v['Name'] == nextDose, detailedDose), None)
         activeMin = (int)(newDose['ActiveTime'])
@@ -101,8 +103,8 @@ class InMySystem(toga.App):
         expireTime = currentTime + timedelta(minutes=activeMin)
         self.initialData.append({
             "icon": toga.Icon.DEFAULT_ICON,
-            "title": newDose['Name'],
-            "subtitle": expireTime
+            "title": newDose['Name'] + " - " + newDose['Dose'],
+            "subtitle": expireTime.strftime("%H:%M:%S")
         })
         print(newDose)
 
