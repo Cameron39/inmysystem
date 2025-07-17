@@ -6,10 +6,9 @@ import toga
 from toga.style import Pack
 from toga.style.pack import COLUMN, ROW, CENTER, Pack
 from toga import ImageView, Image, Selection
-from toga.sources import ListSource, Listener
-from inmysystem.dataRead import JsonFileHandler
+from toga.sources import ListSource
+from inmysystem.doseHandler import doseHandler
 from datetime import datetime, timedelta
-
 
 class InMySystem(toga.App):
     def startup(self):
@@ -19,11 +18,9 @@ class InMySystem(toga.App):
         We then create a main window (with a name matching the app), and
         show the main window.
         """
-        # self.jsonHandler = JsonFileHandler(self.paths)
-        # jsonData = self.jsonFileHanlder.readData("testInfo.json")
-        # jsonData = self.jsonHandler.readTestFile()
-        # TODO: switch to doseHandler!
-        self._activeDoses = []
+        self.doseHandler = doseHandler(self.paths)
+        self.doseHandler.getDoseInfo()
+
 
         self.initialData = ListSource( # THIS WORKS!
             data=[
@@ -83,12 +80,12 @@ class InMySystem(toga.App):
         self.main_window.show()
 
 
-    def add_dose(self, widget):
+    def btn_testing(self, widget):
         toRemove = self.initialData.find({"title": "Ford Prefect"})
         self.initialData.remove(toRemove)
 
     async def doseInput(self, widget):
-        dialog = doseDialog(self.jsonHandler)
+        dialog = doseDialog(self.doseHandler)
         dialog.show()
         result = await dialog
         self.dose_info.value = result
@@ -96,7 +93,7 @@ class InMySystem(toga.App):
 
     def addNewDose(self, nextDose):
         # TODO: Indicate if the time is for the current day or tomorrow!
-        detailedDose = self.jsonHandler.getDetailDose()
+        detailedDose = self.doseHandler.getDetailDose()
         newDose = next(filter(lambda v: v['Name'] == nextDose, detailedDose), None)
         activeMin = (int)(newDose['ActiveTime'])
         currentTime = datetime.now()
@@ -112,16 +109,16 @@ class InMySystem(toga.App):
 Pop-up dialog for getting the dose to add!
 """
 class doseDialog(toga.Window):
-    def __init__(self, JsonFileHandler):
+    def __init__(self, dosageHandler):
         super().__init__(title="Add Dose", resizable=False, size=(400, 300))
-        self.jsonDataHandler = JsonFileHandler
+        self._doseHandler = dosageHandler
 
-        print(self.jsonDataHandler.getSimpleDose())
+        print(self._doseHandler.getSimpleDose())
 
         self.textinput = toga.TextInput()
         self.selection = toga.Selection(
             #items=["Test1", "Test2"]
-            items = self.jsonDataHandler.getSimpleDose()
+            items = self._doseHandler.getSimpleDose()
         )
         self.ok_button = toga.Button("OK", on_press=self.on_accept)
         self.content = toga.Box(children=[self.textinput, self.ok_button, self.selection])
