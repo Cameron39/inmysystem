@@ -33,6 +33,8 @@ class JsonFileHandler:
             raise json.JSONDecoder(f"Error with JSON decoding: {fileWithPath}")
         except Exception as e:
             raise Exception(f"Unexpected error while reading {fileWithPath}")
+        finally:
+            pass #TODO: CLOSE reference to file?
         
     def parseData(self, jsonData):
         if len(jsonData) == 0: return
