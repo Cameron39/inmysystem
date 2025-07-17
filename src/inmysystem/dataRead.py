@@ -6,7 +6,7 @@ from types import SimpleNamespace
 class JsonFileHandler:
     def __init__(self, app_paths):
         self._app_paths = app_paths
-        self._doseData = _doseData = []
+        self._detailDose = _doseData = []
         self._simpleDose = _simpleDose = []
         self._jsonData = jsonData = ""
 
@@ -39,13 +39,16 @@ class JsonFileHandler:
         if len(jsonData) == 0: return
         
         for dosage in jsonData:
-            self._doseData.append(dosage) 
+            self._detailDose.append(dosage) 
             self._simpleDose.append(dosage["Name"])
 
         # print(self._doseData)
 
     def getSimpleDose(self) -> dict:
         return self._simpleDose
+    
+    def getDetailDose(self) -> list:
+        return self._detailDose
 
         
     def makeJSONPretty(self, jsonData: dict) ->str:

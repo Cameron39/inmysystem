@@ -89,8 +89,18 @@ class InMySystem(toga.App):
         dialog = doseDialog(self.jsonHandler)
         dialog.show()
         result = await dialog
-        print(result)
         self.dose_info.value = result
+        self.addNewDose(result)
+
+    def addNewDose(self, nextDose):
+        detailedDose = self.jsonHandler.getDetailDose()
+        newDose = next(filter(lambda v: v['Name'] == nextDose, detailedDose), None)
+        self.initialData.append({
+            "icon": toga.Icon.DEFAULT_ICON,
+            "title": newDose['Name'],
+            "subtitle": newDose['Dose']
+        })
+        print(newDose)
 
 """
 Pop-up dialog for getting the dose to add!
