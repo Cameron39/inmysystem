@@ -1,7 +1,6 @@
 import json
 import pprint
 from pathlib import Path
-from types import SimpleNamespace
 
 class JsonFileHandler:
     def __init__(self, app_paths):
