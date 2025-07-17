@@ -5,7 +5,7 @@ In My System CSC 470 Final Project
 import toga
 from toga.style import Pack
 from toga.style.pack import COLUMN, ROW, CENTER, Pack
-from toga import ImageView, Image
+from toga import ImageView, Image, Selection
 from toga.sources import ListSource, Listener
 from inmysystem.dataRead import JsonFileHandler
 
@@ -18,9 +18,9 @@ class InMySystem(toga.App):
         We then create a main window (with a name matching the app), and
         show the main window.
         """
-        self.jsonFileHanlder = JsonFileHandler(self.paths)
+        self.jsonHandler = JsonFileHandler(self.paths)
         # jsonData = self.jsonFileHanlder.readData("testInfo.json")
-        jsonData = self.jsonFileHanlder.readTestFile()
+        jsonData = self.jsonHandler.readTestFile()
 
         self.initialData = ListSource( # THIS WORKS!
             data=[
@@ -55,14 +55,14 @@ class InMySystem(toga.App):
 
         self.add_button = toga.Button(
             "Add Dose",
-            on_press= self.add_dose,
+            on_press= self.doseInput,
             margin=5,
         )
         
         # print(f"Value: {item}")
         self.dose_info = toga.MultilineTextInput(readonly=True,
-            # placeholder="Future Information",
-            value=self.initialData,
+            placeholder="Future Information",
+            value=jsonData,
             flex=1,
             margin=5)
         
@@ -71,45 +71,6 @@ class InMySystem(toga.App):
             data =self.initialData
             
         )
-        
-    #     self.dose_list = toga.DetailedList(
-    #         accessors=("Name", "Nickname", "Dose", "ActiveTime", "Notes"),
-    #         data=self.jsonFileHanlder.makeJSONPretty(jsonData),
-    #         missing_value="MISSING",
-    # #         [
-    # #     {
-    # #         "icon": toga.Icon.DEFAULT_ICON,
-    # #         "title": "Arthur Dent",
-    # #         "subtitle": "Where's the tea?"
-    # #     },
-    # #     {
-    # #         "icon": toga.Icon.DEFAULT_ICON,
-    # #         "title": "Ford Prefect",
-    # #         "subtitle": "Do you know where my towel is?"
-    # #     },
-    # #     {
-    # #         "icon": toga.Icon.DEFAULT_ICON,
-    # #         "title": "Tricia McMillan",
-    # #         "subtitle": "What planet are you from?"
-    # #     },
-    # # ]
-    #     )
-
-        # self.doseTable = toga.Table(
-        #     headings=["Name", "Nickname", "Dose", "ActiveTime", "Notes"],
-        #     accessors={"Name", "Nickname", "Dose", "ActiveTime", "Notes"},
-        #     data=self.jsonFileHanlder.makeJSONPretty(jsonData),
-        #     missing_value="NONE",
-        # )
-
-        # self.dose_info.value = jsonData
-        # bck_image = toga.ImageView(toga.Image('./resources/background2.png'),
-        #                            style=Pack(flex=1,
-        #                            align_items=CENTER,
-        #                            width = 435,
-        #                            height = 640,)
-        #                            )
-        # main_box.add(bck_image)
         self.main_box.add(self.add_button)
         self.main_box.add(self.dose_info)
         self.main_box.add(self.dose_list)
@@ -123,7 +84,39 @@ class InMySystem(toga.App):
     def add_dose(self, widget):
         toRemove = self.initialData.find({"title": "Ford Prefect"})
         self.initialData.remove(toRemove)
-    
+
+    async def doseInput(self, widget):
+        dialog = doseDialog(self.jsonHandler)
+        dialog.show()
+        result = await dialog
+        print(result)
+        self.dose_info.value = result
+
+"""
+Pop-up dialog for getting the dose to add!
+"""
+class doseDialog(toga.Window):
+    def __init__(self, JsonFileHandler):
+        super().__init__(title="Add Dose", resizable=False, size=(400, 300))
+        self.jsonDataHandler = JsonFileHandler
+
+        print(self.jsonDataHandler.getSimpleDose())
+
+        self.textinput = toga.TextInput()
+        self.selection = toga.Selection(
+            #items=["Test1", "Test2"]
+            items = self.jsonDataHandler.getSimpleDose()
+        )
+        self.ok_button = toga.Button("OK", on_press=self.on_accept)
+        self.content = toga.Box(children=[self.textinput, self.ok_button, self.selection])
+        self.future = self.app.loop.create_future()
+
+    def on_accept(self, widget, **kwargs):
+        self.future.set_result(self.selection.value)
+        self.close()
+
+    def __await__(self):
+        return self.future.__await__()
 
 
 def main():
