@@ -8,6 +8,7 @@ from toga.style.pack import COLUMN, ROW, CENTER, Pack
 from toga import ImageView, Image, Selection
 from toga.sources import ListSource, Listener
 from inmysystem.dataRead import JsonFileHandler
+from datetime import datetime, timedelta
 
 
 class InMySystem(toga.App):
@@ -95,10 +96,13 @@ class InMySystem(toga.App):
     def addNewDose(self, nextDose):
         detailedDose = self.jsonHandler.getDetailDose()
         newDose = next(filter(lambda v: v['Name'] == nextDose, detailedDose), None)
+        activeMin = (int)(newDose['ActiveTime'])
+        currentTime = datetime.now()
+        expireTime = currentTime + timedelta(minutes=activeMin)
         self.initialData.append({
             "icon": toga.Icon.DEFAULT_ICON,
             "title": newDose['Name'],
-            "subtitle": newDose['Dose']
+            "subtitle": expireTime
         })
         print(newDose)
 
