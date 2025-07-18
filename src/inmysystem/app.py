@@ -20,12 +20,13 @@ class InMySystem(toga.App):
         We then create a main window (with a name matching the app), and
         show the main window.
         """
+        self.timeFormat = "%a at %H:%M:%S"
         self.doseHandler = doseHandler(self.paths)
         self.doseHandler.getDoseInfo()
 
         self.activeList = ListSource( # THIS WORKS!
-            data=[],
-            accessors=["icon","title","subtitle"]
+            accessors=("icon","title","subtitle"),
+            data=[]
         )
 
         self.main_box = toga.Box(
@@ -62,19 +63,18 @@ class InMySystem(toga.App):
         self.main_window.show()
         
     def btn_testing(self, widget):
-        toRemove = self.activeList.find({"title": "Ford Prefect"})
-        self.activeList.remove(toRemove)
+        pass
 
     async def doseInput(self, widget):
         dialog = doseDialog(self.doseHandler)
         dialog.show()
         result = await dialog
-        self.dose_info.value = result
+        #self.dose_info.value = result
         self.addNewDose(result)
         await self.checkTime()
 
     def addNewDose(self, nextDose):
-        # TODO: Indicate if the time is for the current day or tomorrow!
+        # TODO: Add the day? 
         detailedDose = self.doseHandler.getDetailDose()
         newDose = next(filter(lambda v: v['Name'] == nextDose, detailedDose), None)
         activeMin = (int)(newDose['ActiveTime'])
@@ -83,7 +83,7 @@ class InMySystem(toga.App):
         self.activeList.append({
             "icon": toga.Icon.DEFAULT_ICON,
             "title": newDose['Name'] + " - " + newDose['Dose'],
-            "subtitle": expireTime.strftime("%H:%M:%S")
+            "subtitle": expireTime.strftime(self.timeFormat)
         })
         self.doseHandler.addActiveDose(expireTime)
         #print(newDose)
@@ -97,7 +97,7 @@ class InMySystem(toga.App):
             if self.doseHandler.activeTimeDose:
                 currTime = datetime.now()
                 if currTime > self.doseHandler.activeTimeDose[0]:
-                    timeRemove = (self.doseHandler.activeTimeDose[0]).strftime("%H:%M:%S")
+                    timeRemove = (self.doseHandler.activeTimeDose[0]).strftime(self.timeFormat)
                     toRemove = self.activeList.find({"subtitle": timeRemove})
                     self.activeList.remove(toRemove)
             await asyncio.sleep(interval_seconds)
