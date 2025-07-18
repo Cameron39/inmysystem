@@ -40,6 +40,7 @@ class doseHandler():
     def addActiveDose(self, newDosage):
         newDose = newDosage
         self.activeTimeDose.append(newDose)
+        self.activeTimeDose.sort()
         print(f"Added Dose {newDose}")
 
     def getActiveDose(self) -> list:

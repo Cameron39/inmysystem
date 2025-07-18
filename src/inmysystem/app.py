@@ -11,6 +11,7 @@ from toga.sources import ListSource
 from inmysystem.doseHandler import doseHandler
 from datetime import datetime, timedelta
 import asyncio
+import pprint
 
 class InMySystem(toga.App):
     def startup(self):
@@ -44,7 +45,6 @@ class InMySystem(toga.App):
             margin=5,
         )
         
-        # print(f"Value: {item}")
         self.dose_info = toga.MultilineTextInput(readonly=True,
             placeholder="Future Information",
             flex=1,
@@ -52,20 +52,16 @@ class InMySystem(toga.App):
         
         self.dose_list = toga.DetailedList(
             missing_value="WHAT",
-            data =self.activeList
-            
+            data =self.activeList     
         )
         self.main_box.add(self.add_button)
         self.main_box.add(self.dose_info)
         self.main_box.add(self.dose_list)
-        # self.main_box.add(self.doseTable)
 
         self.main_window = toga.MainWindow(title=self.formal_name)
         self.main_window.content = self.main_box
         self.main_window.show()
         
-
-
     def btn_testing(self, widget):
         toRemove = self.activeList.find({"title": "Ford Prefect"})
         self.activeList.remove(toRemove)
@@ -98,12 +94,25 @@ class InMySystem(toga.App):
         interval_seconds = 20
 
         while True:
+            print("Checking...")
             if self.doseHandler.activeTimeDose:
                 #print(self.doseHandler.activeTimeDose[0])
                 currTime = datetime.now()
                 #print(currTime)
                 if currTime > self.doseHandler.activeTimeDose[0]:
-                    print("Time has passed!")    
+                    #print("Time has passed!")
+                    # remote from the self.activeList
+                    #for a in self.activeList:
+                    #    pprint.pprint(a)
+                    timeRemove = (self.doseHandler.activeTimeDose[0]).strftime("%H:%M:%S")
+                    #print(f"timeRemove: {timeRemove}")
+                    #searchStr = "{\"subtitle\": %(time)s}" % {"time":timeRemove}
+                    #searchStr = f"subtitle='{timeRemove}'"
+                    #print(f"searchStr: {searchStr}")
+                    # toRemove = self.activeList.index(f"\"subtitle\": \"{timeRemove}\"")
+                    toRemove = self.activeList.find({"subtitle": timeRemove})
+                    #print(f"toRemove: {toRemove}")
+                    self.activeList.remove(toRemove)
             await asyncio.sleep(interval_seconds)
 
 """
@@ -114,7 +123,7 @@ class doseDialog(toga.Window):
         super().__init__(title="Add Dose", resizable=False, size=(400, 300))
         self._doseHandler = dosageHandler
 
-        print(self._doseHandler.getSimpleDose())
+        # print(self._doseHandler.getSimpleDose())
 
         self.textinput = toga.TextInput()
         self.selection = toga.Selection(
