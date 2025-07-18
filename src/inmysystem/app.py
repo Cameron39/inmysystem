@@ -74,7 +74,6 @@ class InMySystem(toga.App):
         await self.checkTime()
 
     def addNewDose(self, nextDose):
-        # TODO: Add the day? 
         detailedDose = self.doseHandler.getDetailDose()
         newDose = next(filter(lambda v: v['Name'] == nextDose, detailedDose), None)
         activeMin = (int)(newDose['ActiveTime'])
@@ -113,25 +112,31 @@ class doseDialog(toga.Window):
         super().__init__(title="Add Dose", resizable=False, size=(400, 300))
         self._doseHandler = dosageHandler
 
-        self.selection = toga.Selection(
-            items = self._doseHandler.getSimpleDose()
-            on_change=self.updateList
+        self.doseInfo = ListSource( # THIS WORKS!
+            accessors=("icon","title","subtitle"),
+            data=[
+
+            ]
         )
 
-        self.infoTable = toga.Table(
-            headings=["Name", "NickName", "Dose", "ActiveTime", "Notes"],
-            data=[]
+        self.selection = toga.Selection(
+            items = self._doseHandler.getSimpleDose(),
+            on_change=self.updateList,
         )
-        self.ok_button = toga.Button("OK", on_press=self.on_accept)
+
+        self.doseInfoDtlList = toga.DetailedList(data=self.doseInfo)
+
+        self.ok_button = toga.Button("Add Dose", on_press=self.on_accept)
         self.content = toga.Box(
-            style=Pack(direction=COLUMN, flex=1),
+            style=Pack(direction=COLUMN, flex=1, margin=10),
             children=[
                 self.selection,
-                self.infoTable,
+                self.doseInfoDtlList,
                 self.ok_button, 
                 ]
             )
         self.future = self.app.loop.create_future()
+        self.updateList(self.selection)
 
     def on_accept(self, widget, **kwargs):
         self.future.set_result(self.selection.value)
@@ -140,11 +145,18 @@ class doseDialog(toga.Window):
     def __await__(self):
         return self.future.__await__()
     
-    def updateList(self):
-        pass
+    def updateList(self, widget):
+        nextDose = self.selection.value
+        detailedDose = self._doseHandler.getDetailDose()
+        newDose = next(filter(lambda v: v['Name'] == nextDose, detailedDose), None)
+        self.doseInfo.clear()
+        for key,item in newDose.items():
+            self.doseInfo.append({
+                "icon": toga.Icon.DEFAULT_ICON,
+                "title": key,
+                "subtitle": item
+            })
 
-    def fillTable(self):
-        full_list = self._doseHandler.getDetailDose()
 
 
 def main():
