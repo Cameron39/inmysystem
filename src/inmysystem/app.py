@@ -120,15 +120,21 @@ class doseDialog(toga.Window):
         )
 
         self.selection = toga.Selection(
+            style=Pack(margin=5),
             items = self._doseHandler.getSimpleDose(),
             on_change=self.updateList,
         )
 
-        self.doseInfoDtlList = toga.DetailedList(data=self.doseInfo)
+        self.doseInfoDtlList = toga.DetailedList(
+            style=Pack(margin=5),
+            data=self.doseInfo
+            )
 
-        self.ok_button = toga.Button("Add Dose", on_press=self.on_accept)
+        self.ok_button = toga.Button("Add Dose", on_press=self.on_accept,
+            style=Pack(margin=5)
+            )
         self.content = toga.Box(
-            style=Pack(direction=COLUMN, flex=1, margin=10),
+            style=Pack(direction=COLUMN, flex=1, margin=5),
             children=[
                 self.selection,
                 self.doseInfoDtlList,
