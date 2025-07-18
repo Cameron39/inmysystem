@@ -85,17 +85,17 @@ class InMySystem(toga.App):
         activeMin = (int)(newDose['ActiveTime'])
         currentTime = datetime.now()
         expireTime = currentTime + timedelta(minutes=activeMin)
-        # self.activeList.append({
-        #     "icon": toga.Icon.DEFAULT_ICON,
-        #     "title": newDose['Name'] + " - " + newDose['Dose'],
-        #     "subtitle": expireTime.strftime(self.timeFormat)
-        # })
-
-        tempDict = {
+        self.dtl_cur_list_src.append({
             "icon": toga.Icon.DEFAULT_ICON,
             "title": newDose['Name'] + " - " + newDose['Dose'],
             "subtitle": expireTime.strftime(self.time_format)
-        }
+        })
+
+        # tempDict = {
+        #     "icon": toga.Icon.DEFAULT_ICON,
+        #     "title": newDose['Name'] + " - " + newDose['Dose'],
+        #     "subtitle": expireTime.strftime(self.time_format)
+        # }
 
         
         self.dose_handler.addActiveTimeDose(expireTime)
@@ -113,14 +113,18 @@ class InMySystem(toga.App):
                     try:
                         timeRemove = (self.dose_handler.current_dose_times[0]).strftime(self.time_format)
                         toRemove = self.dtl_cur_list_src.find({"subtitle": timeRemove})
-                        
+                        toRemInd = self.dtl_cur_list_src.index(toRemove)
+                        to_history = self.dtl_cur_list_src.__getitem__(toRemInd)
+                        #print(toRemove)
+                        #print(toRemInd)
+                        #print(to_history.title)
                         self.dtl_cur_list_src.remove(toRemove)
-                        # self.historyList.append({
-                        #     "icon": toRemove["icon"],
-                        #     "title": toRemove["title"],
-                        #     "subtitle": toRemove["subtitle"]
-                        # })
-                        # self.historyList.append(toRemove)
+                        self.dtl_hst_list_src.append({
+                            "icon": to_history.icon,
+                            "title": to_history.title,
+                            "subtitle": to_history.subtitle
+                        })
+                        #self.dtl_hst_list_src.append(to_history)
                         del self.dose_handler.current_dose_times[0]
                     except Exception as e:
                         raise Exception(f"Unexpected error while removing from activeList {e}")
