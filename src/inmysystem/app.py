@@ -97,9 +97,12 @@ class InMySystem(toga.App):
             if self.doseHandler.activeTimeDose:
                 currTime = datetime.now()
                 if currTime > self.doseHandler.activeTimeDose[0]:
-                    timeRemove = (self.doseHandler.activeTimeDose[0]).strftime(self.timeFormat)
-                    toRemove = self.activeList.find({"subtitle": timeRemove})
-                    self.activeList.remove(toRemove)
+                    try:
+                        timeRemove = (self.doseHandler.activeTimeDose[0]).strftime(self.timeFormat)
+                        toRemove = self.activeList.find({"subtitle": timeRemove})
+                        self.activeList.remove(toRemove)
+                    except Exception as e:
+                        raise Exception("Unexpected error while removing from activeList")
             await asyncio.sleep(interval_seconds)
 
 """
