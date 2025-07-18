@@ -11,7 +11,6 @@ from toga.sources import ListSource
 from inmysystem.doseHandler import doseHandler
 from datetime import datetime, timedelta
 import asyncio
-import pprint
 
 class InMySystem(toga.App):
     def startup(self):
@@ -96,22 +95,10 @@ class InMySystem(toga.App):
         while True:
             print("Checking...")
             if self.doseHandler.activeTimeDose:
-                #print(self.doseHandler.activeTimeDose[0])
                 currTime = datetime.now()
-                #print(currTime)
                 if currTime > self.doseHandler.activeTimeDose[0]:
-                    #print("Time has passed!")
-                    # remote from the self.activeList
-                    #for a in self.activeList:
-                    #    pprint.pprint(a)
                     timeRemove = (self.doseHandler.activeTimeDose[0]).strftime("%H:%M:%S")
-                    #print(f"timeRemove: {timeRemove}")
-                    #searchStr = "{\"subtitle\": %(time)s}" % {"time":timeRemove}
-                    #searchStr = f"subtitle='{timeRemove}'"
-                    #print(f"searchStr: {searchStr}")
-                    # toRemove = self.activeList.index(f"\"subtitle\": \"{timeRemove}\"")
                     toRemove = self.activeList.find({"subtitle": timeRemove})
-                    #print(f"toRemove: {toRemove}")
                     self.activeList.remove(toRemove)
             await asyncio.sleep(interval_seconds)
 
