@@ -31,11 +31,11 @@ class doseHandler():
             self.src_dose_all.append(dosage) 
             self.src_dose_names.append(dosage["Name"])
 
-    def getSimpleDose(self) -> dict:
-        return self.src_dose_names
+    # def getSimpleDose(self) -> dict:
+    #     return self.src_dose_names
 
-    def getDetailDose(self) -> list:
-        return self.src_dose_all
+    # def getDetailDose(self) -> list:
+    #     return self.src_dose_all
     
     def addActiveTimeDose(self, new_dosage):
         new_dose = new_dosage
