@@ -22,9 +22,14 @@ class InMySystem(toga.App):
         """
         self.timeFormat = "%a at %H:%M:%S"
         self.doseHandler = doseHandler(self.paths)
-        self.doseHandler.getDoseInfo()
+        self.doseHandler.loadDoseInfo()
 
         self.activeList = ListSource( # THIS WORKS!
+            accessors=("icon","title","subtitle"),
+            data=[]
+        )
+
+        self.historyList = ListSource(
             accessors=("icon","title","subtitle"),
             data=[]
         )
@@ -45,18 +50,19 @@ class InMySystem(toga.App):
             margin=5,
         )
         
-        self.dose_info = toga.MultilineTextInput(readonly=True,
-            placeholder="Future Information",
-            flex=1,
-            margin=5)
+        self.dose_history = toga.DetailedList(
+            missing_value="None",
+            data = self.historyList
+            )
         
         self.dose_list = toga.DetailedList(
             missing_value="WHAT",
             data =self.activeList     
         )
         self.main_box.add(self.add_button)
-        self.main_box.add(self.dose_info)
         self.main_box.add(self.dose_list)
+        self.main_box.add(self.dose_history)
+        
 
         self.main_window = toga.MainWindow(title=self.formal_name)
         self.main_window.content = self.main_box
@@ -79,12 +85,20 @@ class InMySystem(toga.App):
         activeMin = (int)(newDose['ActiveTime'])
         currentTime = datetime.now()
         expireTime = currentTime + timedelta(minutes=activeMin)
-        self.activeList.append({
+        # self.activeList.append({
+        #     "icon": toga.Icon.DEFAULT_ICON,
+        #     "title": newDose['Name'] + " - " + newDose['Dose'],
+        #     "subtitle": expireTime.strftime(self.timeFormat)
+        # })
+
+        tempDict = {
             "icon": toga.Icon.DEFAULT_ICON,
             "title": newDose['Name'] + " - " + newDose['Dose'],
             "subtitle": expireTime.strftime(self.timeFormat)
-        })
-        self.doseHandler.addActiveDose(expireTime)
+        }
+
+        
+        self.doseHandler.addActiveTimeDose(expireTime)
         #print(newDose)
         #print(self.doseHandler.getActiveDose())
 
@@ -93,13 +107,21 @@ class InMySystem(toga.App):
 
         while True:
             print("Checking...")
-            if self.doseHandler.activeTimeDose:
+            if self.doseHandler.current_dose_times:
                 currTime = datetime.now()
-                if currTime > self.doseHandler.activeTimeDose[0]:
+                if currTime > self.doseHandler.current_dose_times[0]:
                     try:
-                        timeRemove = (self.doseHandler.activeTimeDose[0]).strftime(self.timeFormat)
+                        timeRemove = (self.doseHandler.current_dose_times[0]).strftime(self.timeFormat)
                         toRemove = self.activeList.find({"subtitle": timeRemove})
+                        
                         self.activeList.remove(toRemove)
+                        # self.historyList.append({
+                        #     "icon": toRemove["icon"],
+                        #     "title": toRemove["title"],
+                        #     "subtitle": toRemove["subtitle"]
+                        # })
+                        # self.historyList.append(toRemove)
+                        del self.doseHandler.current_dose_times[0]
                     except Exception as e:
                         raise Exception(f"Unexpected error while removing from activeList {e}")
             await asyncio.sleep(interval_seconds)

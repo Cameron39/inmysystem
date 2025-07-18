@@ -11,38 +11,38 @@ from datetime import datetime, timedelta
 
 class doseHandler():
     def __init__(self, appPath):
-        self._appPath = appPath
-        self.detailDose = []
-        self.simpleDose = []
-        self.activeTimeDose = []
-        self.dataFile = "testInfo.json"
+        self._app_Path = appPath
+        self.src_dose_all = []
+        self.src_dose_names = []
+        self.current_dose_times = []
+        self.data_file = "testInfo.json"
 
-    def getDoseInfo(self):
-        JHandler = JsonFileHandler(self._appPath)
-        tempdata = JHandler.readData(self.dataFile)
+    def loadDoseInfo(self):
+        JHandler = JsonFileHandler(self._app_Path)
+        temp_data = JHandler.readData(self.data_file)
 
-        if (bool(tempdata)):
-            self.parseDoseInfo(tempdata)
+        if (bool(temp_data)):
+            self._parseDoseInfo(temp_data)
 
-    def parseDoseInfo(self, jsonData):
+    def _parseDoseInfo(self, jsonData):
         if len(jsonData) == 0: return
         
         for dosage in jsonData:
-            self.detailDose.append(dosage) 
-            self.simpleDose.append(dosage["Name"])
+            self.src_dose_all.append(dosage) 
+            self.src_dose_names.append(dosage["Name"])
 
     def getSimpleDose(self) -> dict:
-        return self.simpleDose
+        return self.src_dose_names
 
     def getDetailDose(self) -> list:
-        return self.detailDose
+        return self.src_dose_all
     
-    def addActiveDose(self, newDosage):
-        newDose = newDosage
-        self.activeTimeDose.append(newDose)
-        self.activeTimeDose.sort()
+    def addActiveTimeDose(self, new_dosage):
+        new_dose = new_dosage
+        self.current_dose_times.append(new_dose)
+        self.current_dose_times.sort()
         #print(f"Added Dose {newDose}")
 
     def getActiveDose(self) -> list:
-        return self.activeTimeDose
+        return self.current_dose_times
 
