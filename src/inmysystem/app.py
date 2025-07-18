@@ -4,6 +4,7 @@ Test Change
 """
 
 import toga
+import toga.icons
 from toga.style import Pack
 from toga.style.pack import COLUMN, ROW, CENTER, Pack
 from toga import ImageView, Image, Selection
@@ -22,7 +23,9 @@ class InMySystem(toga.App):
         """
         self.time_format = "%a at %H:%M:%S"
         self.dose_handler = doseHandler(self.paths)
-        self.dose_handler.loadDoseInfo()
+        self.default_icon = toga.Icon.DEFAULT_ICON
+        self.dose_handler.loadDoseFile()
+        self.dose_handler.loadHistoryFile()
 
         self.dtl_cur_list_src = ListSource( # THIS WORKS!
             accessors=("icon","title","subtitle"),
@@ -59,10 +62,11 @@ class InMySystem(toga.App):
             missing_value="WHAT",
             data =self.dtl_cur_list_src     
         )
+
         self.main_box.add(self.add_button)
         self.main_box.add(self.dose_list)
         self.main_box.add(self.dose_history)
-        
+        # self.loadHistoryData()
 
         self.main_window = toga.MainWindow(title=self.formal_name)
         self.main_window.content = self.main_box
@@ -79,26 +83,52 @@ class InMySystem(toga.App):
         self.addNewDose(result)
         await self.checkTime()
 
+    def addToListSource(self, the_list_source : ListSource, the_dict : dict):
+        print("Inside add to list source 0")
+        print(((the_list_source.__len__())))
+        print((bool(the_dict)))
+        if (bool(the_dict)):
+            print("Inside add to list source 3")
+            the_list_source.append({
+                "icon": self.default_icon,
+                "title": the_dict['Name'] + " - " + the_dict['Dose'],
+                "subtitle": the_dict['Expire']
+            })
+
+    def loadHistoryData(self):
+        if (bool(self.dose_handler.history_dose)):
+            current_time = datetime.now()
+            for dose in self.dose_handler.history_dose:
+                if current_time > datetime.fromisoformat(dose['Expire']):
+                    self.addToListSource(self.dtl_hst_list_src, dose)
+                else:
+                    self.addToListSource(self.dtl_cur_list_src, dose)
+                # self.dtl_hst_list_src.append({
+                #     "icon": self.default_icon,
+                #     "title": dose['Name'] + " - " + dose['Dose'],
+                #     "subtitle": dose['Expire']
+                #})
+
     def addNewDose(self, nextDose):
         detailedDose = self.dose_handler.src_dose_all
         newDose = next(filter(lambda v: v['Name'] == nextDose, detailedDose), None)
         activeMin = (int)(newDose['ActiveTime'])
         currentTime = datetime.now()
         expireTime = currentTime + timedelta(minutes=activeMin)
+
         self.dtl_cur_list_src.append({
-            "icon": toga.Icon.DEFAULT_ICON,
+            "icon": self.default_icon,
             "title": newDose['Name'] + " - " + newDose['Dose'],
             "subtitle": expireTime.strftime(self.time_format)
         })
 
         self.dose_handler.history_dose.append({
-            "name": newDose['Name'],
-            "dose": newDose['Dose'],
-            "expire": expireTime.strftime(self.time_format)
+            "Name": newDose['Name'],
+            "Dose": newDose['Dose'],
+            "Expire": expireTime.strftime(self.time_format)
         })
         self.dose_handler.writeHistory()
-        print(self.dose_handler.history_dose)
-
+        # print(self.dose_handler.history_dose)
         
         self.dose_handler.addActiveTimeDose(expireTime)
         #print(newDose)
@@ -142,9 +172,7 @@ class doseDialog(toga.Window):
 
         self.doseInfo = ListSource( 
             accessors=("icon","title","subtitle"),
-            data=[
-
-            ]
+            data=[]
         )
 
         self.selection = toga.Selection(
@@ -186,7 +214,7 @@ class doseDialog(toga.Window):
         self.doseInfo.clear()
         for key,item in newDose.items():
             self.doseInfo.append({
-                "icon": toga.Icon.DEFAULT_ICON,
+                "icon": self.default_icon,
                 "title": key,
                 "subtitle": item
             })

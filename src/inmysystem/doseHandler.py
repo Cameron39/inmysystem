@@ -16,24 +16,34 @@ class doseHandler():
         self.src_dose_names = []
         self.current_dose_times = []
         self.history_dose = []
-        self.data_file = "testInfo.json"
+        self.dose_file = "testInfo.json"
+        self.history_file = "history.json"
         self.JHandler = JsonFileHandler(self._app_Path)
 
-    def loadDoseInfo(self):
-        temp_data = self.JHandler.read_dose_data(self.data_file)
+    def loadDoseFile(self):
+        temp_data = self.JHandler.read_dose_data(self.dose_file)
 
         if (bool(temp_data)):
             self._parseDoseInfo(temp_data)
 
-    def _parseDoseInfo(self, jsonData):
-        if len(jsonData) == 0: return
+    def loadHistoryFile(self):
+        temp_data = self.JHandler.read_dose_data(self.history_file)
+
+        if (bool(temp_data)):
+            self._parseHistory(temp_data)
+
+    def _parseDoseInfo(self, json_data):
+        if len(json_data) == 0: return
         
-        for dosage in jsonData:
+        for dosage in json_data:
             self.src_dose_all.append(dosage) 
             self.src_dose_names.append(dosage["Name"])
 
-    # def getSimpleDose(self) -> dict:
-    #     return self.src_dose_names
+    def _parseHistory(self, json_data):
+        if len(json_data) == 0: return
+
+        for dosage in json_data:
+            self.history_dose.append(dosage)
 
     def getDetailDose(self) -> list:
         return self.src_dose_all
@@ -48,4 +58,4 @@ class doseHandler():
         return self.current_dose_times
 
     def writeHistory(self):
-        self.JHandler.write_dose_history(self.history_dose)
+        self.JHandler.write_dose_history(self.history_dose, self.history_file)
