@@ -15,6 +15,7 @@ class doseHandler():
         self.src_dose_all = []
         self.src_dose_names = []
         self.current_dose_times = []
+        self.history_dose = []
         self.data_file = "testInfo.json"
 
     def loadDoseInfo(self):

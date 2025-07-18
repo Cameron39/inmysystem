@@ -91,11 +91,12 @@ class InMySystem(toga.App):
             "subtitle": expireTime.strftime(self.time_format)
         })
 
-        # tempDict = {
-        #     "icon": toga.Icon.DEFAULT_ICON,
-        #     "title": newDose['Name'] + " - " + newDose['Dose'],
-        #     "subtitle": expireTime.strftime(self.time_format)
-        # }
+        self.dose_handler.history_dose.append({
+            "name": newDose['Name'],
+            "dose": newDose['Dose'],
+            "expire": expireTime
+        })
+        print(self.dose_handler.history_dose)
 
         
         self.dose_handler.addActiveTimeDose(expireTime)
