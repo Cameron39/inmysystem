@@ -17,10 +17,10 @@ class doseHandler():
         self.current_dose_times = []
         self.history_dose = []
         self.data_file = "testInfo.json"
+        self.JHandler = JsonFileHandler(self._app_Path)
 
     def loadDoseInfo(self):
-        JHandler = JsonFileHandler(self._app_Path)
-        temp_data = JHandler.readData(self.data_file)
+        temp_data = self.JHandler.read_dose_data(self.data_file)
 
         if (bool(temp_data)):
             self._parseDoseInfo(temp_data)
@@ -47,3 +47,5 @@ class doseHandler():
     def getActiveDose(self) -> list:
         return self.current_dose_times
 
+    def writeHistory(self):
+        self.JHandler.write_dose_history(self.history_dose)

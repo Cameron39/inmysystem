@@ -94,8 +94,9 @@ class InMySystem(toga.App):
         self.dose_handler.history_dose.append({
             "name": newDose['Name'],
             "dose": newDose['Dose'],
-            "expire": expireTime
+            "expire": expireTime.strftime(self.time_format)
         })
+        self.dose_handler.writeHistory()
         print(self.dose_handler.history_dose)
 
         
