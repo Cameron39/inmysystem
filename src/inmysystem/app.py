@@ -102,7 +102,7 @@ class InMySystem(toga.App):
                         toRemove = self.activeList.find({"subtitle": timeRemove})
                         self.activeList.remove(toRemove)
                     except Exception as e:
-                        raise Exception("Unexpected error while removing from activeList")
+                        raise Exception(f"Unexpected error while removing from activeList {e}")
             await asyncio.sleep(interval_seconds)
 
 """
@@ -113,15 +113,24 @@ class doseDialog(toga.Window):
         super().__init__(title="Add Dose", resizable=False, size=(400, 300))
         self._doseHandler = dosageHandler
 
-        # print(self._doseHandler.getSimpleDose())
-
-        self.textinput = toga.TextInput()
         self.selection = toga.Selection(
-            #items=["Test1", "Test2"]
             items = self._doseHandler.getSimpleDose()
+            on_change=self.updateList
+        )
+
+        self.infoTable = toga.Table(
+            headings=["Name", "NickName", "Dose", "ActiveTime", "Notes"],
+            data=[]
         )
         self.ok_button = toga.Button("OK", on_press=self.on_accept)
-        self.content = toga.Box(children=[self.textinput, self.ok_button, self.selection])
+        self.content = toga.Box(
+            style=Pack(direction=COLUMN, flex=1),
+            children=[
+                self.selection,
+                self.infoTable,
+                self.ok_button, 
+                ]
+            )
         self.future = self.app.loop.create_future()
 
     def on_accept(self, widget, **kwargs):
@@ -130,6 +139,12 @@ class doseDialog(toga.Window):
 
     def __await__(self):
         return self.future.__await__()
+    
+    def updateList(self):
+        pass
+
+    def fillTable(self):
+        full_list = self._doseHandler.getDetailDose()
 
 
 def main():
