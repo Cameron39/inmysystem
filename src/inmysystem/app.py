@@ -10,6 +10,7 @@ from toga import ImageView, Image, Selection
 from toga.sources import ListSource
 from inmysystem.doseHandler import doseHandler
 from datetime import datetime, timedelta
+import asyncio
 
 class InMySystem(toga.App):
     def startup(self):
@@ -22,25 +23,8 @@ class InMySystem(toga.App):
         self.doseHandler = doseHandler(self.paths)
         self.doseHandler.getDoseInfo()
 
-
-        self.initialData = ListSource( # THIS WORKS!
-            data=[
-                {
-                    "icon": toga.Icon.DEFAULT_ICON,
-                    "title": "Arthur Dent",
-                    "subtitle": "Where's the tea?"
-                },
-                {
-                    "icon": toga.Icon.DEFAULT_ICON,
-                    "title": "Ford Prefect",
-                    "subtitle": "Do you know where my towel is?"
-                },
-                {
-                    "icon": toga.Icon.DEFAULT_ICON,
-                    "title": "Tricia McMillan",
-                    "subtitle": "What planet are you from?"
-                },
-            ],
+        self.activeList = ListSource( # THIS WORKS!
+            data=[],
             accessors=["icon","title","subtitle"]
         )
 
@@ -68,7 +52,7 @@ class InMySystem(toga.App):
         
         self.dose_list = toga.DetailedList(
             missing_value="WHAT",
-            data =self.initialData
+            data =self.activeList
             
         )
         self.main_box.add(self.add_button)
@@ -79,11 +63,12 @@ class InMySystem(toga.App):
         self.main_window = toga.MainWindow(title=self.formal_name)
         self.main_window.content = self.main_box
         self.main_window.show()
+        
 
 
     def btn_testing(self, widget):
-        toRemove = self.initialData.find({"title": "Ford Prefect"})
-        self.initialData.remove(toRemove)
+        toRemove = self.activeList.find({"title": "Ford Prefect"})
+        self.activeList.remove(toRemove)
 
     async def doseInput(self, widget):
         dialog = doseDialog(self.doseHandler)
@@ -91,6 +76,7 @@ class InMySystem(toga.App):
         result = await dialog
         self.dose_info.value = result
         self.addNewDose(result)
+        await self.checkTime()
 
     def addNewDose(self, nextDose):
         # TODO: Indicate if the time is for the current day or tomorrow!
@@ -99,12 +85,26 @@ class InMySystem(toga.App):
         activeMin = (int)(newDose['ActiveTime'])
         currentTime = datetime.now()
         expireTime = currentTime + timedelta(minutes=activeMin)
-        self.initialData.append({
+        self.activeList.append({
             "icon": toga.Icon.DEFAULT_ICON,
             "title": newDose['Name'] + " - " + newDose['Dose'],
             "subtitle": expireTime.strftime("%H:%M:%S")
         })
-        print(newDose)
+        self.doseHandler.addActiveDose(expireTime)
+        #print(newDose)
+        #print(self.doseHandler.getActiveDose())
+
+    async def checkTime(self):
+        interval_seconds = 20
+
+        while True:
+            if self.doseHandler.activeTimeDose:
+                #print(self.doseHandler.activeTimeDose[0])
+                currTime = datetime.now()
+                #print(currTime)
+                if currTime > self.doseHandler.activeTimeDose[0]:
+                    print("Time has passed!")    
+            await asyncio.sleep(interval_seconds)
 
 """
 Pop-up dialog for getting the dose to add!

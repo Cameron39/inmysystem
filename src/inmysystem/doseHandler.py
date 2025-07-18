@@ -7,13 +7,14 @@ Put ALL data here!
 """
 
 from inmysystem.dataRead import JsonFileHandler
+from datetime import datetime, timedelta
 
 class doseHandler():
     def __init__(self, appPath):
         self._appPath = appPath
         self.detailDose = []
         self.simpleDose = []
-        self.activeDose = []
+        self.activeTimeDose = []
         self.dataFile = "testInfo.json"
 
     def getDoseInfo(self):
@@ -36,6 +37,11 @@ class doseHandler():
     def getDetailDose(self) -> list:
         return self.detailDose
     
-    async def checkActiveDose(self) -> list:
-        pass
+    def addActiveDose(self, newDosage):
+        newDose = newDosage
+        self.activeTimeDose.append(newDose)
+        print(f"Added Dose {newDose}")
+
+    def getActiveDose(self) -> list:
+        return self.activeTimeDose
 
