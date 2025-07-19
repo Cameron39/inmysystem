@@ -61,4 +61,5 @@ class doseHandler():
         self.JHandler.write_dose_history(self.history_dose, self.history_file)
 
     def clearFile(self, filename):
-        pass
+        #print("Ready to Clear File!")
+        self.JHandler.truncate_file(file2truncate=filename)
