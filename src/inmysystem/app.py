@@ -31,7 +31,6 @@ class InMySystem(toga.App):
         self.dose_handler.loadDoseFile()
         self.dose_handler.loadHistoryFile()
         
-
         self.dtl_cur_list_src = ListSource(
             accessors=("icon","title","subtitle"),
             data=[]
@@ -118,7 +117,6 @@ class InMySystem(toga.App):
         if await self.main_window.dialog(toga.InfoDialog(message, message)):
             return
         
-
     async def doseInput(self, widget):
         dialog = doseDialog(self.dose_handler)
         dialog.show()
@@ -151,24 +149,37 @@ class InMySystem(toga.App):
                 else:
                     self.addToListSource(self.dtl_cur_list_src, dose, doseGenStatus.ACTIVE)
 
+    def checkIfDoseActive(self, newDose : dict):
+        #detailedDose = self.dose_handler.src_dose_all
+        #actDose = next(filter(lambda v: (v['Name'] + " - " + v['Dose']) == newDose, detailedDose), None)
+        #print(f"Inside: {actDose}")
+        # temp_row = self.dtl_cur_list_src.find(
+        #     ("title='" + newDose['Name'] + " - " + newDose['Dose'] + "'")
+        #     )
+        print(f"Did we find something? {self.dtl_cur_list_src.__getitem__(4)}")
+        temp = (' '.join([str(s) for s in self.dtl_cur_list_src])).find(newDose['Name'])
+        print(temp)
+    
     def addNewDose(self, nextDose):
-        detailedDose = self.dose_handler.src_dose_all
-        newDose = next(filter(lambda v: v['Name'] == nextDose, detailedDose), None)
-        activeMin = (int)(newDose['ActiveTime'])
-        currentTime = datetime.now()
-        expireTime = currentTime + timedelta(minutes=activeMin)
+        detailed_dose = self.dose_handler.src_dose_all
+        new_dose = next(filter(lambda v: v['Name'] == nextDose, detailed_dose), None)
+        active_min = (float)(new_dose['ActiveMinutes'])
+        current_time = datetime.now()
+        expire_time = current_time + timedelta(minutes=active_min)
 
-        newDose['Expire'] = expireTime
-        self.addToListSource(self.dtl_cur_list_src, newDose, doseGenStatus.ACTIVE)
-        self.addToListSource(self.dtl_hst_list_src, newDose, doseGenStatus.HISTORY)
+        self.checkIfDoseActive(new_dose)
+
+        new_dose['Expire'] = expire_time
+        self.addToListSource(self.dtl_cur_list_src, new_dose, doseGenStatus.ACTIVE)
+        self.addToListSource(self.dtl_hst_list_src, new_dose, doseGenStatus.HISTORY)
 
         self.dose_handler.history_dose.append({
-            "Name": newDose['Name'],
-            "Dose": newDose['Dose'],
-            "Expire": expireTime.isoformat()
+            "Name": new_dose['Name'],
+            "Dose": new_dose['Dose'],
+            "Expire": expire_time.isoformat()
         })
         self.dose_handler.writeHistory()
-        self.dose_handler.addActiveTimeDose(expireTime)
+        self.dose_handler.addActiveTimeDose(expire_time)
 
     async def checkTime(self):
         interval_seconds = 20
@@ -196,7 +207,7 @@ class doseDialog(toga.Window):
     def __init__(self, dosageHandler):
         super().__init__(title="Add Dose", resizable=False, size=(400, 200))
         self._doseHandler = dosageHandler
-        self.active_icon = toga.Icon(doseGenStatus.ADD.value)
+        self.add_icon = toga.Icon(doseGenStatus.ADD.value)
 
         self.doseInfo = ListSource( 
             accessors=("icon","title","subtitle"),
@@ -242,7 +253,7 @@ class doseDialog(toga.Window):
         self.doseInfo.clear()
         for key,item in newDose.items():
             self.doseInfo.append({
-                "icon": self.active_icon,
+                "icon": self.add_icon,
                 "title": key,
                 "subtitle": item
             })

@@ -3,28 +3,28 @@
     "Name": "Ibuprofen",
     "Nickname": "Motrin, Advil",
     "Dose": "200mg",
-    "ActiveTime": "240",
+    "ActiveMinutes": "240",
     "Notes": "Take with Food"
   },
   {
     "Name": "Acetaminophen",
     "Nickname": "Tylenol",
     "Dose": "1000mg",
-    "ActiveTime": "360",
+    "ActiveMinutes": "360",
     "Notes": "Take with Food"
   },
   {
     "Name": "Diphenhydramine",
     "Nickname": "Benadryl",
     "Dose": "200mg",
-    "ActiveTime": "240",
+    "ActiveMinutes": "240",
     "Notes": "May make you drowsey"
   },
   {
     "Name": "Jelly Bean",
     "Nickname": "FOR TESTING ONLY",
     "Dose": "210mg",
-    "ActiveTime": "1",
+    "ActiveMinutes": "0.1",
     "Notes": "May give you a sugar high"
   }
 ]
