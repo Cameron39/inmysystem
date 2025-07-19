@@ -4,7 +4,7 @@ class JsonFileHandler:
 
     def __init__(self, app_paths):
         self._app_paths = app_paths
-        self._jsonData = jsonData = ""
+        self._json_data = jsonData = ""
 
         # print(f"JsonFileHandler initialized with path base: {self._app_paths.app}")
         
@@ -19,8 +19,8 @@ class JsonFileHandler:
             return []
         try:
             json_text = file_with_path.read_text(encoding="utf-8")
-            self._jsonData = json.loads(json_text)
-            return self._jsonData     
+            self._json_data = json.loads(json_text)
+            return self._json_data     
         except json.JSONDecodeError:
             raise json.JSONDecoder(f"Error with JSON decoding: {file_with_path}")
         except Exception as e:
