@@ -21,11 +21,16 @@ class InMySystem(toga.App):
         We then create a main window (with a name matching the app), and
         show the main window.
         """
+        # icon_path = self.paths.app / "icons" / "active_dose.ico"
+        print(self.paths.app.absolute)
+        print(self.paths)
         self.time_format = "%a at %H:%M:%S"
         self.dose_handler = doseHandler(self.paths)
         self.default_icon = toga.Icon.DEFAULT_ICON
+        self.active_icon = toga.Icon.APP_ICON
         self.dose_handler.loadDoseFile()
         self.dose_handler.loadHistoryFile()
+        
 
         self.dtl_cur_list_src = ListSource( # THIS WORKS!
             accessors=("icon","title","subtitle"),
@@ -147,7 +152,7 @@ class InMySystem(toga.App):
         expireTime = currentTime + timedelta(minutes=activeMin)
 
         self.dtl_cur_list_src.append({
-            "icon": self.default_icon,
+            "icon": self.active_icon,
             "title": newDose['Name'] + " - " + newDose['Dose'],
             "subtitle": expireTime.strftime(self.time_format)
         })
