@@ -12,27 +12,12 @@
     {
         "Name": "Ibuprofen",
         "Dose": "200mg",
-        "Expire": "2025-07-19T00:02:37.073922"
-    },
-    {
-        "Name": "Ibuprofen",
-        "Dose": "200mg",
-        "Expire": "2025-07-19T00:07:38.630443"
-    },
-    {
-        "Name": "Ibuprofen",
-        "Dose": "200mg",
         "Expire": "2025-07-19T00:12:14.716614"
     },
     {
         "Name": "Acetaminophen",
         "Dose": "1000mg",
         "Expire": "2025-07-19T06:11:21.291033"
-    },
-    {
-        "Name": "Ibuprofen",
-        "Dose": "200mg",
-        "Expire": "2025-07-19T00:13:19.072570"
     },
     {
         "Name": "Acetaminophen",
@@ -52,16 +37,11 @@
     {
         "Name": "Ibuprofen",
         "Dose": "200mg",
-        "Expire": "2025-07-19T13:35:43.881694"
-    },
-    {
-        "Name": "Ibuprofen",
-        "Dose": "200mg",
-        "Expire": "2025-07-19T13:43:59.477740"
-    },
-    {
-        "Name": "Ibuprofen",
-        "Dose": "200mg",
         "Expire": "2025-07-19T14:02:34.194208"
+    },
+    {
+        "Name": "Acetaminophen",
+        "Dose": "1000mg",
+        "Expire": "2025-07-19T20:30:55.718412"
     }
 ]

@@ -12,7 +12,11 @@ from toga.sources import ListSource
 from inmysystem.doseHandler import doseHandler
 from datetime import datetime, timedelta
 import asyncio
+from enum import Enum
 
+class doseGenStatus(Enum):
+    ACTIVE = 'resources/pill2.png'
+    HISTORY = 'resources/pill5.png'
 class InMySystem(toga.App):
     def startup(self):
         """Construct and show the Toga application.
@@ -22,13 +26,13 @@ class InMySystem(toga.App):
         show the main window.
         """
         # icon_path = self.paths.app / "icons" / "active_dose.ico"
-        print(self.paths.app.absolute)
-        print(self.paths)
+        # print(self.paths.app.absolute)
+        # print(self.paths)
         self.time_format = "%a at %H:%M:%S"
         self.dose_handler = doseHandler(self.paths)
         # self.default_icon = toga.Icon('resource/history.png')
-        self.active_icon = toga.Icon('resources/active.png')
-        self.history_icon = toga.Icon('resources/history.png')
+        self.active_icon = toga.Icon('resources/pill2.png')
+        self.history_icon = toga.Icon('resources/pill5.png')
         self.dose_handler.loadDoseFile()
         self.dose_handler.loadHistoryFile()
         
@@ -128,11 +132,18 @@ class InMySystem(toga.App):
         self.addNewDose(result)
         await self.checkTime()
 
-    def addToListSource(self, the_list_source : ListSource, the_dict : dict):
+    def addToListSource(self, the_list_source : ListSource, the_dict : dict, type: doseGenStatus):
+            try:
+                if isinstance(the_dict['Expire'], datetime):
+                    new_time = the_dict['Expire'].strftime(self.time_format)
+                else:
+                    new_time = datetime.fromisoformat(the_dict['Expire']).strftime(self.time_format)
+            except Exception as e:
+                raise Exception(f"Unexpected error extracting time: {e}")
             the_list_source.append({
-                "icon": self.active_icon,
+                "icon": toga.Icon(type.value),
                 "title": the_dict['Name'] + " - " + the_dict['Dose'],
-                "subtitle": datetime.fromisoformat(the_dict['Expire']).strftime(self.time_format)
+                "subtitle": new_time
             })
 
     def loadHistoryData(self):
@@ -141,9 +152,9 @@ class InMySystem(toga.App):
             for dose in self.dose_handler.history_dose:
                 expire_time = datetime.fromisoformat(dose['Expire'])
                 if current_time > expire_time:
-                    self.addToListSource(self.dtl_hst_list_src, dose)
+                    self.addToListSource(self.dtl_hst_list_src, dose, doseGenStatus.HISTORY)
                 else:
-                    self.addToListSource(self.dtl_cur_list_src, dose)
+                    self.addToListSource(self.dtl_cur_list_src, dose, doseGenStatus.ACTIVE)
 
     def addNewDose(self, nextDose):
         detailedDose = self.dose_handler.src_dose_all
@@ -152,17 +163,21 @@ class InMySystem(toga.App):
         currentTime = datetime.now()
         expireTime = currentTime + timedelta(minutes=activeMin)
 
-        self.dtl_cur_list_src.append({
-            "icon": self.active_icon,
-            "title": newDose['Name'] + " - " + newDose['Dose'],
-            "subtitle": expireTime.strftime(self.time_format)
-        })
+        newDose['Expire'] = expireTime
+        self.addToListSource(self.dtl_cur_list_src, newDose, doseGenStatus.ACTIVE)
+        self.addToListSource(self.dtl_hst_list_src, newDose, doseGenStatus.HISTORY)
 
-        self.dtl_hst_list_src.append({
-            "icon": self.history_icon,
-            "title": newDose['Name'] + " - " + newDose['Dose'],
-            "subtitle": expireTime.strftime(self.time_format)
-        })
+        # self.dtl_cur_list_src.append({
+        #     "icon": self.active_icon,
+        #     "title": newDose['Name'] + " - " + newDose['Dose'],
+        #     "subtitle": expireTime.strftime(self.time_format)
+        # })
+
+        # self.dtl_hst_list_src.append({
+        #     "icon": self.history_icon,
+        #     "title": newDose['Name'] + " - " + newDose['Dose'],
+        #     "subtitle": expireTime.strftime(self.time_format)
+        # })
 
         self.dose_handler.history_dose.append({
             "Name": newDose['Name'],
@@ -198,7 +213,7 @@ class doseDialog(toga.Window):
     def __init__(self, dosageHandler):
         super().__init__(title="Add Dose", resizable=False, size=(400, 200))
         self._doseHandler = dosageHandler
-        self.active_icon = toga.Icon('resources/pilladd.png')
+        self.active_icon = toga.Icon(doseGenStatus.ACTIVE.value)
 
         self.doseInfo = ListSource( 
             accessors=("icon","title","subtitle"),

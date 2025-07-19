@@ -3,7 +3,7 @@
     "Name": "Ibuprofen",
     "Nickname": "Motrin, Advil",
     "Dose": "200mg",
-    "ActiveTime": "1",
+    "ActiveTime": "240",
     "Notes": "Take with Food"
   },
   {
@@ -19,5 +19,12 @@
     "Dose": "200mg",
     "ActiveTime": "240",
     "Notes": "May make you drowsey"
+  },
+  {
+    "Name": "Jelly Bean ",
+    "Nickname": "FOR TESTING OHLY",
+    "Dose": "2g",
+    "ActiveTime": "1",
+    "Notes": "May give you a sugar high"
   }
 ]

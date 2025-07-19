@@ -2,11 +2,12 @@
 [tool.briefcase]
 project_name = "In My System"
 bundle = "com.example"
-version = "1.0.1"
+version = "0.4"
 url = "https://example.com/inmysystem"
 license.file = "LICENSE"
 author = "Cameron Pitcel"
 author_email = "cpitcel@uis.edu"
+
 
 [tool.briefcase.app.inmysystem]
 formal_name = "In My System"

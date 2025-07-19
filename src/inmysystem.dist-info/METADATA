@@ -3,9 +3,9 @@ Briefcase-Version: 0.3.24
 Name: inmysystem
 Formal-Name: In My System
 App-ID: com.example.inmysystem
-Version: 0.0.1
+Version: 1.0.1
 Home-page: https://example.com/inmysystem
 Download-URL: https://example.com/inmysystem
-Author: Cameron
+Author: Cameron Pitcel
 Author-email: cpitcel@uis.edu
-Summary: In My System CSC 470 Final Project
+Summary: In My System - CSC 470 Final Project
