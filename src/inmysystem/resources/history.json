@@ -1,0 +1,22 @@
+[
+    {
+        "Name": "Ibuprofen",
+        "Dose": "200mg",
+        "Expire": "2025-07-18T19:43:47.928343"
+    },
+    {
+        "Name": "Acetaminophen",
+        "Dose": "1000mg",
+        "Expire": "2025-07-19T01:42:54.282345"
+    },
+    {
+        "Name": "Diphenhydramine ",
+        "Dose": "200mg",
+        "Expire": "2025-07-18T23:42:59.448033"
+    },
+    {
+        "Name": "Ibuprofen",
+        "Dose": "200mg",
+        "Expire": "2025-07-18T19:44:01.753373"
+    }
+]
