@@ -26,7 +26,7 @@ class InMySystem(toga.App):
         print(self.paths)
         self.time_format = "%a at %H:%M:%S"
         self.dose_handler = doseHandler(self.paths)
-        self.default_icon = toga.Icon.DEFAULT_ICON
+        self.default_icon = toga.Icon.APP_ICON
         self.active_icon = toga.Icon.APP_ICON
         self.dose_handler.loadDoseFile()
         self.dose_handler.loadHistoryFile()
