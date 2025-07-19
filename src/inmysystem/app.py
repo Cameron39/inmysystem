@@ -48,7 +48,7 @@ class InMySystem(toga.App):
         self.add_button = toga.Button(
             "Add New Dose",
             on_press= self.doseInput,
-            style=Pack(margin_top=1, margin_bottom=25, margin_left=20, margin_right=20),
+            style=Pack(margin_top=1, margin_bottom=20, margin_left=20, margin_right=20),
         )
 
         self.clear_history = toga.Button(
@@ -75,12 +75,16 @@ class InMySystem(toga.App):
         )
 
         self.lbl_his_dose = toga.Label(
-            text="History of Dose(s)"
+            text="History of Dose(s)",
+            style=Pack(margin_top=10)
         )
+
+        self.divi = toga.Divider()
 
         self.main_box.add(self.lbl_cur_dose)
         self.main_box.add(self.dose_list)
         self.main_box.add(self.add_button)
+        self.main_box.add(self.divi)
         self.main_box.add(self.lbl_his_dose)
         self.main_box.add(self.dose_history)
         self.main_box.add(self.clear_history)
