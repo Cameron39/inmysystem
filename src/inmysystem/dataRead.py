@@ -31,7 +31,7 @@ class JsonFileHandler:
 
         try:
             history_json = json.dumps(dose_history, indent=4)
-            print(history_json)
+            #print(history_json)
             file_with_path.write_text(history_json)
         except Exception as e:
             raise Exception(f"Unexpected error while writing to {file_with_path}: {e}")

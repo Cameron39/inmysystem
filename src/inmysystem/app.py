@@ -4,7 +4,7 @@ Test Change
 """
 
 import toga
-import toga.icons
+# import toga.icons
 from toga.style import Pack
 from toga.style.pack import COLUMN, ROW, CENTER, Pack
 from toga import ImageView, Image, Selection
@@ -42,8 +42,6 @@ class InMySystem(toga.App):
                 margin=20,
                 align_items=CENTER,
                 direction=COLUMN,
-                #width = 200,
-                #height = 200,
             ),
         )
 
@@ -90,7 +88,6 @@ class InMySystem(toga.App):
 
         self.main_window = toga.MainWindow(title=self.formal_name, size=(400,300))
         self.main_window.content = self.main_box
-        #self.main_window.__init__(size=(400,300))
         self.main_window.show()
         
     def btn_testing(self, widget):
@@ -118,7 +115,6 @@ class InMySystem(toga.App):
         dialog = doseDialog(self.dose_handler)
         dialog.show()
         result = await dialog
-        #self.dose_info.value = result
         self.addNewDose(result)
         await self.checkTime()
 
@@ -164,11 +160,7 @@ class InMySystem(toga.App):
             "Expire": expireTime.isoformat()
         })
         self.dose_handler.writeHistory()
-        # print(self.dose_handler.history_dose)
-        
         self.dose_handler.addActiveTimeDose(expireTime)
-        #print(newDose)
-        #print(self.doseHandler.getActiveDose())
 
     async def checkTime(self):
         interval_seconds = 20
@@ -183,16 +175,7 @@ class InMySystem(toga.App):
                         toRemove = self.dtl_cur_list_src.find({"subtitle": timeRemove})
                         toRemInd = self.dtl_cur_list_src.index(toRemove)
                         to_history = self.dtl_cur_list_src.__getitem__(toRemInd)
-                        #print(toRemove)
-                        #print(toRemInd)
-                        #print(to_history.title)
                         self.dtl_cur_list_src.remove(toRemove)
-                        # self.dtl_hst_list_src.append({
-                        #     "icon": to_history.icon,
-                        #     "title": to_history.title,
-                        #     "subtitle": to_history.subtitle
-                        # })
-                        #self.dtl_hst_list_src.append(to_history)
                         del self.dose_handler.current_dose_times[0]
                     except Exception as e:
                         raise Exception(f"Unexpected error while removing from activeList {e}")
