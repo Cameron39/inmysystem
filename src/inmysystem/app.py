@@ -15,8 +15,9 @@ import asyncio
 from enum import Enum
 
 class doseGenStatus(Enum):
-    ACTIVE = 'resources/pill2.png'
-    HISTORY = 'resources/pill5.png'
+    ACTIVE = 'resources/active.png'
+    HISTORY = 'resources/history.png'
+    ADD = 'resources/pilladd.png'
 class InMySystem(toga.App):
     def startup(self):
         """Construct and show the Toga application.
@@ -195,7 +196,7 @@ class doseDialog(toga.Window):
     def __init__(self, dosageHandler):
         super().__init__(title="Add Dose", resizable=False, size=(400, 200))
         self._doseHandler = dosageHandler
-        self.active_icon = toga.Icon(doseGenStatus.ACTIVE.value)
+        self.active_icon = toga.Icon(doseGenStatus.ADD.value)
 
         self.doseInfo = ListSource( 
             accessors=("icon","title","subtitle"),
