@@ -48,30 +48,42 @@ class InMySystem(toga.App):
         )
 
         self.add_button = toga.Button(
-            "Add Dose",
+            "Add New Dose",
             on_press= self.doseInput,
-            margin=5,
+            style=Pack(margin_top=1, margin_bottom=25, margin_left=20, margin_right=20),
         )
 
         self.clear_history = toga.Button(
-            "Clear History File",
+            "Clear All History",
             id="clear_history",
             on_press=self.clear_file,
-            margin=5
+            style=Pack(margin_top=1, margin_bottom=5, margin_left=20, margin_right=20)
         )
         
         self.dose_history = toga.DetailedList(
             missing_value="None",
-            data = self.dtl_hst_list_src
+            data = self.dtl_hst_list_src,
+            style=Pack(margin=5)
             )
         
         self.dose_list = toga.DetailedList(
-            missing_value="WHAT",
-            data =self.dtl_cur_list_src     
+            missing_value="None",
+            data =self.dtl_cur_list_src,
+            style=Pack(margin=5)     
         )
 
-        self.main_box.add(self.add_button)
+        self.lbl_cur_dose = toga.Label(
+            text="Current Dose(s)"
+        )
+
+        self.lbl_his_dose = toga.Label(
+            text="History of Dose(s)"
+        )
+
+        self.main_box.add(self.lbl_cur_dose)
         self.main_box.add(self.dose_list)
+        self.main_box.add(self.add_button)
+        self.main_box.add(self.lbl_his_dose)
         self.main_box.add(self.dose_history)
         self.main_box.add(self.clear_history)
         self.loadHistoryData()
@@ -191,7 +203,7 @@ Pop-up dialog for getting the dose to add!
 """
 class doseDialog(toga.Window):
     def __init__(self, dosageHandler):
-        super().__init__(title="Add Dose", resizable=False, size=(400, 300))
+        super().__init__(title="Add Dose", resizable=False, size=(400, 200))
         self._doseHandler = dosageHandler
 
         self.doseInfo = ListSource( 

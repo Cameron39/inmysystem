@@ -2,17 +2,17 @@
 [tool.briefcase]
 project_name = "In My System"
 bundle = "com.example"
-version = "0.0.1"
+version = "1.0.1"
 url = "https://example.com/inmysystem"
 license.file = "LICENSE"
-author = "Cameron"
+author = "Cameron Pitcel"
 author_email = "cpitcel@uis.edu"
 
 [tool.briefcase.app.inmysystem]
 formal_name = "In My System"
-description = "In My System CSC 470 Final Project"
-long_description = """More details about the app should go here.
-"""
+description = "Final Project for CSC 470"
+long_description = "Allows for tracking of doses currently in your system"
+
 icon = "icons/inmysystem"
 sources = [
     "src/inmysystem",
@@ -22,6 +22,11 @@ test_sources = [
 ]
 
 requires = [
+    "json",
+    "datetime",
+    "asyncio",
+    "pprint",
+    "path"
 ]
 test_requires = [
     "pytest",
