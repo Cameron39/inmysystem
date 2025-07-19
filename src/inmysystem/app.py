@@ -26,8 +26,9 @@ class InMySystem(toga.App):
         print(self.paths)
         self.time_format = "%a at %H:%M:%S"
         self.dose_handler = doseHandler(self.paths)
-        self.default_icon = toga.Icon.APP_ICON
-        self.active_icon = toga.Icon.APP_ICON
+        # self.default_icon = toga.Icon('resource/history.png')
+        self.active_icon = toga.Icon('resources/active.png')
+        self.history_icon = toga.Icon('resources/history.png')
         self.dose_handler.loadDoseFile()
         self.dose_handler.loadHistoryFile()
         
@@ -107,13 +108,13 @@ class InMySystem(toga.App):
         message = ""
 
         if await self.main_window.dialog(user_answer):
-            print("Confirmed")
+            #print("Confirmed")
             if widget.id == "clear_history": 
                 self.dose_handler.clearFile(self.dose_handler.history_file)
                 message = "Completed"
                 self.dtl_hst_list_src.clear()
         else:
-            print("Denied")
+            #print("Denied")
             message = "Aborted"
             
         if await self.main_window.dialog(toga.InfoDialog(message, message)):
@@ -129,7 +130,7 @@ class InMySystem(toga.App):
 
     def addToListSource(self, the_list_source : ListSource, the_dict : dict):
             the_list_source.append({
-                "icon": self.default_icon,
+                "icon": self.active_icon,
                 "title": the_dict['Name'] + " - " + the_dict['Dose'],
                 "subtitle": datetime.fromisoformat(the_dict['Expire']).strftime(self.time_format)
             })
@@ -158,7 +159,7 @@ class InMySystem(toga.App):
         })
 
         self.dtl_hst_list_src.append({
-            "icon": self.default_icon,
+            "icon": self.history_icon,
             "title": newDose['Name'] + " - " + newDose['Dose'],
             "subtitle": expireTime.strftime(self.time_format)
         })
@@ -197,6 +198,7 @@ class doseDialog(toga.Window):
     def __init__(self, dosageHandler):
         super().__init__(title="Add Dose", resizable=False, size=(400, 200))
         self._doseHandler = dosageHandler
+        self.active_icon = toga.Icon('resources/pilladd.png')
 
         self.doseInfo = ListSource( 
             accessors=("icon","title","subtitle"),
@@ -242,7 +244,7 @@ class doseDialog(toga.Window):
         self.doseInfo.clear()
         for key,item in newDose.items():
             self.doseInfo.append({
-                "icon": toga.Icon.DEFAULT_ICON,
+                "icon": self.active_icon,
                 "title": key,
                 "subtitle": item
             })
