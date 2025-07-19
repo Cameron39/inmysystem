@@ -45,6 +45,13 @@ class JsonFileHandler:
             file_with_path.write_text(history_json)
         except Exception as e:
             raise Exception(f"Unexpected error while writing to {file_with_path}: {e}")
+        
+    def truncate_file(self, file2truncate : str):
+        file_with_path = self._app_paths.app / "resources" / file2truncate
+        try:
+            file_with_path.truncate()
+        except Exception as e:
+            raise Exception(f"Unexpected error while trunating {file_with_path}: {e}")
 
     def makeJSONPretty(self, jsonData: dict) ->str:
         return pprint.pformat(jsonData, sort_dicts=False)

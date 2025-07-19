@@ -59,3 +59,6 @@ class doseHandler():
 
     def writeHistory(self):
         self.JHandler.write_dose_history(self.history_dose, self.history_file)
+
+    def clearFile(self, filename):
+        pass

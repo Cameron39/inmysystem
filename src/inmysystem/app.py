@@ -52,6 +52,13 @@ class InMySystem(toga.App):
             on_press= self.doseInput,
             margin=5,
         )
+
+        self.clear_history = toga.Button(
+            "Clear History",
+            id="clear_history",
+            on_press=self.clear_file,
+            margin=5
+        )
         
         self.dose_history = toga.DetailedList(
             missing_value="None",
@@ -66,6 +73,7 @@ class InMySystem(toga.App):
         self.main_box.add(self.add_button)
         self.main_box.add(self.dose_list)
         self.main_box.add(self.dose_history)
+        self.main_box.add(self.clear_history)
         self.loadHistoryData()
 
         self.main_window = toga.MainWindow(title=self.formal_name)
@@ -74,6 +82,12 @@ class InMySystem(toga.App):
         
     def btn_testing(self, widget):
         pass
+
+    def clear_file(self, widget):
+        print(f"Widget ID: {widget.id}")
+        if widget.id == "clear_history":
+            print("Clearin time!")
+        #self.dose_handler.clearFile(filename)
 
     async def doseInput(self, widget):
         dialog = doseDialog(self.dose_handler)
@@ -94,18 +108,11 @@ class InMySystem(toga.App):
         if (bool(self.dose_handler.history_dose)):
             current_time = datetime.now()
             for dose in self.dose_handler.history_dose:
-                #expire_time = datetime.strptime(dose['Expire'], self.time_format)
                 expire_time = datetime.fromisoformat(dose['Expire'])
-                print(expire_time)
                 if current_time > expire_time:
                     self.addToListSource(self.dtl_hst_list_src, dose)
                 else:
                     self.addToListSource(self.dtl_cur_list_src, dose)
-                # self.dtl_hst_list_src.append({
-                #     "icon": self.default_icon,
-                #     "title": dose['Name'] + " - " + dose['Dose'],
-                #     "subtitle": dose['Expire']
-                #})
 
     def addNewDose(self, nextDose):
         detailedDose = self.dose_handler.src_dose_all
