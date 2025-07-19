@@ -75,11 +75,11 @@ class InMySystem(toga.App):
         )
 
         self.lbl_cur_dose = toga.Label(
-            text="Current Dose(s)"
+            text="Current Dose(s)" + "{:>39}".format("Expiration")
         )
 
         self.lbl_his_dose = toga.Label(
-            text="History of Dose(s)",
+            text="History of Dose(s)" + "{:>32}".format("Expiration"),
             style=Pack(margin_top=10)
         )
 
@@ -181,7 +181,7 @@ class InMySystem(toga.App):
                         timeRemove = (self.dose_handler.current_dose_times[0]).strftime(self.time_format)
                         toRemove = self.dtl_cur_list_src.find({"subtitle": timeRemove})
                         toRemInd = self.dtl_cur_list_src.index(toRemove)
-                        to_history = self.dtl_cur_list_src.__getitem__(toRemInd)
+                        #to_history = self.dtl_cur_list_src.__getitem__(toRemInd)
                         self.dtl_cur_list_src.remove(toRemove)
                         del self.dose_handler.current_dose_times[0]
                     except Exception as e:

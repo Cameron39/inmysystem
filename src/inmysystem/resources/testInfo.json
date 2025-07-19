@@ -14,16 +14,16 @@
     "Notes": "Take with Food"
   },
   {
-    "Name": "Diphenhydramine ",
+    "Name": "Diphenhydramine",
     "Nickname": "Benadryl",
     "Dose": "200mg",
     "ActiveTime": "240",
     "Notes": "May make you drowsey"
   },
   {
-    "Name": "Jelly Bean ",
-    "Nickname": "FOR TESTING OHLY",
-    "Dose": "2g",
+    "Name": "Jelly Bean",
+    "Nickname": "FOR TESTING ONLY",
+    "Dose": "210mg",
     "ActiveTime": "1",
     "Notes": "May give you a sugar high"
   }
