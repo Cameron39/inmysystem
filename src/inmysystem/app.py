@@ -42,9 +42,9 @@ class InMySystem(toga.App):
                 margin=20,
                 align_items=CENTER,
                 direction=COLUMN,
-                # width = 435,
-                # height = 640,
-            )
+                #width = 200,
+                #height = 200,
+            ),
         )
 
         self.add_button = toga.Button(
@@ -76,8 +76,9 @@ class InMySystem(toga.App):
         self.main_box.add(self.clear_history)
         self.loadHistoryData()
 
-        self.main_window = toga.MainWindow(title=self.formal_name)
+        self.main_window = toga.MainWindow(title=self.formal_name, size=(400,300))
         self.main_window.content = self.main_box
+        #self.main_window.__init__(size=(400,300))
         self.main_window.show()
         
     def btn_testing(self, widget):
@@ -91,7 +92,8 @@ class InMySystem(toga.App):
             print("Confirmed")
             if widget.id == "clear_history": 
                 self.dose_handler.clearFile(self.dose_handler.history_file)
-                message = "Completed, restart program"
+                message = "Completed"
+                self.dtl_hst_list_src.clear()
         else:
             print("Denied")
             message = "Aborted"
