@@ -22,11 +22,7 @@ test_sources = [
 ]
 
 requires = [
-    "json",
-    "datetime",
-    "asyncio",
-    "pprint",
-    "path"
+    "faker"
 ]
 test_requires = [
     "pytest",

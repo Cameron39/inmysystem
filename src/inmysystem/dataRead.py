@@ -1,15 +1,5 @@
 import json
 import pprint
-import datetime
-from pathlib import Path
-from json import JSONEncoder
-
-# class DateTimeEncoder(JSONEncoder):
-#     def default(self, o):
-#         if isinstance(o, (datetime.datetime)):
-#             return o.isoformat
-#         return super().default(o)
-
 class JsonFileHandler:
 
     def __init__(self, app_paths):
