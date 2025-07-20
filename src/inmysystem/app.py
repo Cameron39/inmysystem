@@ -27,7 +27,7 @@ from inmysystem.doseHandler import DoseHandler
 
 class DoseIcons(Enum):
     """
-    Defining the options for icons.
+    Define the options for icons.
     """
 
     ACTIVE = 'resources/active.png'
