@@ -1,9 +1,18 @@
+"""
+Handles reading and writing the dose and history information from JSON files.
+"""
+
 import json
 import pprint
 
 
 class JsonFileHandler:
-    """TODO"""
+    """
+    Loads JSON data from the dose and history files.
+    Uses try...except blocks to trap exceptions.
+    Uses the TOGA path methods so it could work in other platforms.
+    """
+    
     def __init__(self, app_paths):
         self._app_paths = app_paths
         self._json_data = jsonData = ""
