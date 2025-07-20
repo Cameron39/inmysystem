@@ -1,7 +1,16 @@
 """
-In My System CSC 470 Final Project
-Test Change
-TODO:
+In My System 
+CSC 470 Final Project
+Author: Cameron Pitcel
+
+Allows the user to select doses from a pre-populated list and track them.
+Tracks what is currently in the user's system and logs a history.
+
+Use of Toga for GUI elements and possibility of working on other platforms.
+
+This is proof of concept and should not be used for actual medical advise.
+Users should still be consulting a doctor for medication use.
+Dose information is based off manufacturer recommendations.
 """
 
 from datetime import datetime, timedelta
@@ -17,21 +26,35 @@ from inmysystem.doseHandler import DoseHandler
 
 
 class DoseIcons(Enum):
-    """TODO:"""
+    """
+    Defining the options for icons.
+    """
+
     ACTIVE = 'resources/active.png'
     HISTORY = 'resources/history.png'
     ADD = 'resources/pilladd.png'
 
 
 class InMySystem(toga.App):
-    """TODO:"""
+    """
+    Handles the GUI elements and user interaction.
+    Allows the user to add dose(s), view active dose(s), view history, 
+        and clear all.
+    Uses async methods to handle additional user inputs.
+    Uses list sources for the data source of detailed lists widgets.
+    Adds and remove items from list sources based on user action.
+    Works with the dose handler to add items to the history.
+    Loads the history data into the corresponding list source elements.
+    When adding a new dose, checks if there is an active dose and verifies 
+        with the user before adding.
+    Runs an async method to check if there are any doses ready for removal
+        from the active doses detailed list widget every predetermined interval.
+    """
 
     def startup(self):
-        """Construct and show the Toga application.
-
-        Usually, you would add your application to a main content box.
-        We then create a main window (with a name matching the app), and
-        show the main window.
+        """
+        Define the Toga widgets, add them to the main window, and show the
+            Toga application.
         """
         self.time_format = "%a at %H:%M:%S"
         self.dose_handler = DoseHandler(self.paths)
@@ -109,7 +132,12 @@ class InMySystem(toga.App):
         self.main_window.show()
 
     async def clear_all(self, widget):
-        """TODO:"""
+        """
+        Prompts the user to confirm the clearing of all data.
+        If confirmed, initiages the process to clear all the data including
+            the list sources.
+        Uses async to wait for user input.
+        """
         user_answer = toga.ConfirmDialog("Please Confirm",
             "Please confirm you want ALL DATA removed")
         message = ""
@@ -127,7 +155,13 @@ class InMySystem(toga.App):
             return
         
     async def dose_get(self, widget):
-        """TODO:"""
+        """
+        Handles the user clicking the add dose button.
+        Calls the add dose window and retrieves a dose to add.
+        Calls the command to check if there is an active dose for the new dose.
+        If an active dose is found, it prompts the user to verify the addition.
+        """
+        
         dialog = DoseDialog(self.dose_handler)
         dialog.show()
         result = await dialog
@@ -139,7 +173,12 @@ class InMySystem(toga.App):
     def listsource_add(
             self, the_list_source : ListSource, 
             the_dict : dict, type: DoseIcons):
-        """TODO:"""
+        """
+        Adds an entry into the designated list source.
+        Wrapped in try...exception because it handles different list sources.
+        Reduced a fair amount of code.
+        """
+
         try:
             if isinstance(the_dict['Expire'], datetime):
                 new_time = the_dict['Expire'].strftime(self.time_format)
@@ -156,6 +195,11 @@ class InMySystem(toga.App):
         })
 
     def load_history_data(self):
+        """
+        Loads the history data into the corresponding list sources.
+        Checks the dose expiration time versus the current time.
+        """
+
         if (bool(self.dose_handler.history_dose)):
             current_time = datetime.now()
             for dose in self.dose_handler.history_dose:
@@ -167,7 +211,15 @@ class InMySystem(toga.App):
                         DoseIcons.HISTORY)
 
     async def check_if_dose_is_active(self, new_dose_name : str) -> bool:
-        """ TODO: """
+        """
+        Loads the list source of the current list into a string and searches
+            for the new dose name.
+        List source stores data in a row element with various metadata so 
+            while this is not as elegant, it gets the job done.
+        If an active dose already exists, the user is prompted to confirm the
+            addition. 
+        """
+
         temp_find = (' '.join([str(s) for s in self.dtl_cur_list_src])).find(
             new_dose_name)
 
@@ -185,7 +237,14 @@ class InMySystem(toga.App):
                 return False
     
     def add_new_dose(self, nextDose):
-        """TODO:"""
+        """
+        Adds a new dose to the current dose and history list sources.
+        Calculates the expiration time of the dose.
+        Due to shallow copying of lists, a deep copy is performed.
+        Lambda function queries for the new dose object.
+        Uses the dose handler to write to the core data objects.
+        """
+
         detailed_dose = copy.deepcopy(self.dose_handler.src_dose_all)
         new_dose = next(filter(
             lambda v: v['Name'] == nextDose, detailed_dose
@@ -209,7 +268,13 @@ class InMySystem(toga.App):
         self.dose_handler.add_active_time_dose(expire_time)
 
     async def check_dose_time(self):
-        """TODO:"""
+        """
+        Checks the current dose list source for doses that are past their
+            expiration time and removes them fromt he list source.
+        Sleeps a predetermined number of seconds before checking again.
+        Uses async to give control back when not checking.
+        """
+
         interval_seconds = 20
 
         while True:
@@ -232,9 +297,19 @@ class InMySystem(toga.App):
 
 
 class DoseDialog(toga.Window):
-    """Pop-up dialog for getting the dose to add! TODO:"""
+    """
+    Secondary window that appears when the user uses the add dose button.
+    Displays a drop down populated with all dose name options and displays the
+        information about the dose.
+    Extends the toga.Window class since this is outside the Toga app.
+    Uses the dose handler passed parameter to access the core data.
+    """
 
     def __init__(self, dosageHandler):
+        """
+        Define the Toga widgets, Toga window, and adds widgets to the window.
+        """
+
         super().__init__(title="Add Dose", resizable=False, size=(400, 200))
         self._dose_handler = dosageHandler
         self.add_icon = toga.Icon(DoseIcons.ADD.value)
@@ -283,7 +358,13 @@ class DoseDialog(toga.Window):
         return self.future.__await__()
     
     def fill_dose_info(self, widget):
-        """TODO:"""
+        """
+        Pulls the dosing options and popules the selection widget with all the
+            names while updating the dose information displayed.
+        Lambda function loops through to find the element of the selection value
+            which is then used to populate the dose information displayed.
+        """
+
         next_dose = self.selection_dose.value
         detailed_dose = copy.deepcopy(self._dose_handler.src_dose_all)
         new_dose = next(filter(
@@ -298,4 +379,8 @@ class DoseDialog(toga.Window):
             })
 
 def main():
+    """
+    The function driving the whole operation.
+    """
+
     return InMySystem()

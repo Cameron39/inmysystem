@@ -10,7 +10,7 @@ class JsonFileHandler:
     """
     Loads JSON data from the dose and history files.
     Uses try...except blocks to trap exceptions.
-    Uses the TOGA path methods so it could work in other platforms.
+    Uses the Toga path methods so it could work in other platforms.
     """
     
     def __init__(self, app_paths):
