@@ -49,8 +49,8 @@ class InMySystem(toga.App):
             style=Pack(
                 margin=20,
                 align_items=CENTER,
-                direction=COLUMN,
-            ),
+                direction=COLUMN
+            )
         )
 
         self.add_button = toga.Button(
@@ -239,7 +239,7 @@ class doseDialog(toga.Window):
         self.selection = toga.Selection(
             style=Pack(margin=5),
             items = self._doseHandler.src_dose_names,
-            on_change=self.updateList,
+            on_change=self.updateList
         )
 
         self.doseInfoDtlList = toga.DetailedList(
@@ -261,7 +261,7 @@ class doseDialog(toga.Window):
                 self.lbl_add_dose,
                 self.selection,
                 self.doseInfoDtlList,
-                self.ok_button, 
+                self.ok_button 
                 ]
             )
         self.future = self.app.loop.create_future()
