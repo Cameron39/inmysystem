@@ -3,16 +3,16 @@ In My System CSC 470 Final Project
 Test Change
 """
 
+from datetime import datetime, timedelta
+import asyncio
+from enum import Enum
+import copy
 import toga
 from toga.style import Pack
 from toga.style.pack import COLUMN, ROW, CENTER, Pack
 from toga import ImageView, Image, Selection
 from toga.sources import ListSource
 from inmysystem.doseHandler import doseHandler
-from datetime import datetime, timedelta
-import asyncio
-from enum import Enum
-import copy
 
 
 class doseGenStatus(Enum):
