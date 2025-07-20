@@ -123,7 +123,6 @@ class InMySystem(toga.App):
         dialog.show()
         result = await dialog
         self.addNewDose(result)
-        return
         yes_continue = await self.checkIfDoseActive(result)
         if yes_continue:
             self.addNewDose(result)
@@ -260,9 +259,7 @@ class doseDialog(toga.Window):
     def updateList(self, widget):
         nextDose = self.selection.value
         detailedDose = copy.deepcopy(self._doseHandler.src_dose_all)
-        print(detailedDose)
         newDose = next(filter(lambda v: v['Name'] == nextDose, detailedDose), None)
-        print(newDose)
         self.doseInfo.clear()
         for key,item in newDose.items():
             self.doseInfo.append({
