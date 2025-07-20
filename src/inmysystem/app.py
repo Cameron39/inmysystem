@@ -148,10 +148,9 @@ class InMySystem(toga.App):
             current_time = datetime.now()
             for dose in self.dose_handler.history_dose:
                 expire_time = datetime.fromisoformat(dose['Expire'])
-                if current_time > expire_time:
-                    self.addToListSource(self.dtl_hst_list_src, dose, doseGenStatus.HISTORY)
-                else:
-                    self.addToListSource(self.dtl_cur_list_src, dose, doseGenStatus.ACTIVE)
+                if current_time < expire_time:
+                    self.addToListSource(self.dtl_cur_list_src, dose, doseGenStatus.ACTIVE)   
+                self.addToListSource(self.dtl_hst_list_src, dose, doseGenStatus.HISTORY)
 
     async def checkIfDoseActive(self, new_dose_name : str) -> bool:
         temp_find = (' '.join([str(s) for s in self.dtl_cur_list_src])).find(new_dose_name)
