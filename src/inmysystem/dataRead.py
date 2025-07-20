@@ -3,7 +3,7 @@ import pprint
 
 
 class JsonFileHandler:
-
+    """TODO"""
     def __init__(self, app_paths):
         self._app_paths = app_paths
         self._json_data = jsonData = ""

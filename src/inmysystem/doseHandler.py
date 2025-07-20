@@ -4,12 +4,14 @@ Structure of Dosage
 Handling of Dose
 
 Put ALL data here!
+TODO
 """
 
 from inmysystem.dataRead import JsonFileHandler
 
 
 class DoseHandler():
+    """TODO"""
     def __init__(self, appPath):
         self._app_Path = appPath
         self.src_dose_all = []

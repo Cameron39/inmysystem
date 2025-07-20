@@ -1,6 +1,7 @@
 """
 In My System CSC 470 Final Project
 Test Change
+TODO:
 """
 
 from datetime import datetime, timedelta
@@ -16,12 +17,14 @@ from inmysystem.doseHandler import DoseHandler
 
 
 class DoseIcons(Enum):
+    """TODO:"""
     ACTIVE = 'resources/active.png'
     HISTORY = 'resources/history.png'
     ADD = 'resources/pilladd.png'
 
 
 class InMySystem(toga.App):
+    """TODO:"""
 
     def startup(self):
         """Construct and show the Toga application.
@@ -106,6 +109,7 @@ class InMySystem(toga.App):
         self.main_window.show()
 
     async def clear_all(self, widget):
+        """TODO:"""
         user_answer = toga.ConfirmDialog("Please Confirm",
             "Please confirm you want ALL DATA removed")
         message = ""
@@ -123,6 +127,7 @@ class InMySystem(toga.App):
             return
         
     async def dose_get(self, widget):
+        """TODO:"""
         dialog = DoseDialog(self.dose_handler)
         dialog.show()
         result = await dialog
@@ -134,6 +139,7 @@ class InMySystem(toga.App):
     def listsource_add(
             self, the_list_source : ListSource, 
             the_dict : dict, type: DoseIcons):
+        """TODO:"""
         try:
             if isinstance(the_dict['Expire'], datetime):
                 new_time = the_dict['Expire'].strftime(self.time_format)
@@ -161,6 +167,7 @@ class InMySystem(toga.App):
                         DoseIcons.HISTORY)
 
     async def check_if_dose_is_active(self, new_dose_name : str) -> bool:
+        """ TODO: """
         temp_find = (' '.join([str(s) for s in self.dtl_cur_list_src])).find(
             new_dose_name)
 
@@ -178,6 +185,7 @@ class InMySystem(toga.App):
                 return False
     
     def add_new_dose(self, nextDose):
+        """TODO:"""
         detailed_dose = copy.deepcopy(self.dose_handler.src_dose_all)
         new_dose = next(filter(
             lambda v: v['Name'] == nextDose, detailed_dose
@@ -201,6 +209,7 @@ class InMySystem(toga.App):
         self.dose_handler.add_active_time_dose(expire_time)
 
     async def check_dose_time(self):
+        """TODO:"""
         interval_seconds = 20
 
         while True:
@@ -223,8 +232,8 @@ class InMySystem(toga.App):
 
 
 class DoseDialog(toga.Window):
-    """Pop-up dialog for getting the dose to add!"""
-    
+    """Pop-up dialog for getting the dose to add! TODO:"""
+
     def __init__(self, dosageHandler):
         super().__init__(title="Add Dose", resizable=False, size=(400, 200))
         self._dose_handler = dosageHandler
@@ -274,6 +283,7 @@ class DoseDialog(toga.Window):
         return self.future.__await__()
     
     def fill_dose_info(self, widget):
+        """TODO:"""
         next_dose = self.selection_dose.value
         detailed_dose = copy.deepcopy(self._dose_handler.src_dose_all)
         new_dose = next(filter(
