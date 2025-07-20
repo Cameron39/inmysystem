@@ -12,10 +12,10 @@ from toga.style import Pack
 from toga.style.pack import COLUMN, ROW, CENTER, Pack
 from toga import ImageView, Image, Selection
 from toga.sources import ListSource
-from inmysystem.doseHandler import doseHandler
+from inmysystem.doseHandler import DoseHandler
 
 
-class doseGenStatus(Enum):
+class DoseIcons(Enum):
     ACTIVE = 'resources/active.png'
     HISTORY = 'resources/history.png'
     ADD = 'resources/pilladd.png'
@@ -31,9 +31,9 @@ class InMySystem(toga.App):
         show the main window.
         """
         self.time_format = "%a at %H:%M:%S"
-        self.dose_handler = doseHandler(self.paths)
-        self.dose_handler.loadDoseFile()
-        self.dose_handler.loadHistoryFile()
+        self.dose_handler = DoseHandler(self.paths)
+        self.dose_handler.load_dose_file()
+        self.dose_handler.load_history_file()
         
         self.dtl_cur_list_src = ListSource(
             accessors=("icon","title","subtitle"),
@@ -53,14 +53,14 @@ class InMySystem(toga.App):
             )
         )
 
-        self.add_button = toga.Button(
+        self.btn_add = toga.Button(
             "Add New Dose",
-            on_press= self.doseInput,
+            on_press= self.dose_get,
             style=Pack(
                 margin_top=1, margin_bottom=20, margin_left=20, margin_right=20)
         )
 
-        self.clear_history = toga.Button(
+        self.btn_clear = toga.Button(
             "Clear All Data",
             id="clear_all",
             on_press=self.clear_all,
@@ -68,13 +68,13 @@ class InMySystem(toga.App):
                 margin_top=1, margin_bottom=5, margin_left=20, margin_right=20)
         )
         
-        self.dose_history = toga.DetailedList(
+        self.dtl_dose_history = toga.DetailedList(
             missing_value="None",
             data = self.dtl_hst_list_src,
             style=Pack(margin=5)
             )
         
-        self.dose_list = toga.DetailedList(
+        self.dtl_act_dose = toga.DetailedList(
             missing_value="None",
             data =self.dtl_cur_list_src,
             style=Pack(margin=5)     
@@ -92,13 +92,13 @@ class InMySystem(toga.App):
         self.divi = toga.Divider()
 
         self.main_box.add(self.lbl_cur_dose)
-        self.main_box.add(self.dose_list)
-        self.main_box.add(self.add_button)
+        self.main_box.add(self.dtl_act_dose)
+        self.main_box.add(self.btn_add)
         self.main_box.add(self.divi)
         self.main_box.add(self.lbl_his_dose)
-        self.main_box.add(self.dose_history)
-        self.main_box.add(self.clear_history)
-        self.loadHistoryData()
+        self.main_box.add(self.dtl_dose_history)
+        self.main_box.add(self.btn_clear)
+        self.load_history_data()
 
         self.main_window = toga.MainWindow(
             title=self.formal_name, size=(400,300))
@@ -112,7 +112,7 @@ class InMySystem(toga.App):
 
         if await self.main_window.dialog(user_answer):
             if widget.id == "clear_all": 
-                self.dose_handler.clearFile(self.dose_handler.history_file)
+                self.dose_handler.clear_file(self.dose_handler.history_file)
                 message = "Completed"
                 self.dtl_hst_list_src.clear()
                 self.dtl_cur_list_src.clear()
@@ -122,18 +122,18 @@ class InMySystem(toga.App):
         if await self.main_window.dialog(toga.InfoDialog(message, message)):
             return
         
-    async def doseInput(self, widget):
-        dialog = doseDialog(self.dose_handler)
+    async def dose_get(self, widget):
+        dialog = DoseDialog(self.dose_handler)
         dialog.show()
         result = await dialog
-        yes_continue = await self.checkIfDoseActive(result)
+        yes_continue = await self.check_if_dose_is_active(result)
         if yes_continue:
-            self.addNewDose(result)
-            await self.checkTime()
+            self.add_new_dose(result)
+            await self.check_dose_time()
             
-    def addToListSource(
+    def listsource_add(
             self, the_list_source : ListSource, 
-            the_dict : dict, type: doseGenStatus):
+            the_dict : dict, type: DoseIcons):
         try:
             if isinstance(the_dict['Expire'], datetime):
                 new_time = the_dict['Expire'].strftime(self.time_format)
@@ -149,18 +149,18 @@ class InMySystem(toga.App):
             "subtitle": new_time
         })
 
-    def loadHistoryData(self):
+    def load_history_data(self):
         if (bool(self.dose_handler.history_dose)):
             current_time = datetime.now()
             for dose in self.dose_handler.history_dose:
                 expire_time = datetime.fromisoformat(dose['Expire'])
                 if current_time < expire_time:
-                    self.addToListSource(self.dtl_cur_list_src, dose, 
-                        doseGenStatus.ACTIVE)   
-                self.addToListSource(self.dtl_hst_list_src, dose, 
-                        doseGenStatus.HISTORY)
+                    self.listsource_add(self.dtl_cur_list_src, dose, 
+                        DoseIcons.ACTIVE)   
+                self.listsource_add(self.dtl_hst_list_src, dose, 
+                        DoseIcons.HISTORY)
 
-    async def checkIfDoseActive(self, new_dose_name : str) -> bool:
+    async def check_if_dose_is_active(self, new_dose_name : str) -> bool:
         temp_find = (' '.join([str(s) for s in self.dtl_cur_list_src])).find(
             new_dose_name)
 
@@ -177,7 +177,7 @@ class InMySystem(toga.App):
             else:
                 return False
     
-    def addNewDose(self, nextDose):
+    def add_new_dose(self, nextDose):
         detailed_dose = copy.deepcopy(self.dose_handler.src_dose_all)
         new_dose = next(filter(
             lambda v: v['Name'] == nextDose, detailed_dose
@@ -188,10 +188,8 @@ class InMySystem(toga.App):
 
         new_dose['Expire'] = expire_time
 
-        self.addToListSource(self.dtl_cur_list_src, new_dose, 
-            doseGenStatus.ACTIVE)
-        self.addToListSource(self.dtl_hst_list_src, new_dose, 
-            doseGenStatus.HISTORY)
+        self.listsource_add(self.dtl_cur_list_src, new_dose, DoseIcons.ACTIVE)
+        self.listsource_add(self.dtl_hst_list_src, new_dose, DoseIcons.HISTORY)
 
         self.dose_handler.history_dose.append({
             "Name": new_dose['Name'],
@@ -199,23 +197,23 @@ class InMySystem(toga.App):
             "Expire": expire_time.isoformat()
         })
 
-        self.dose_handler.writeHistory()
-        self.dose_handler.addActiveTimeDose(expire_time)
+        self.dose_handler.write_to_history()
+        self.dose_handler.add_active_time_dose(expire_time)
 
-    async def checkTime(self):
+    async def check_dose_time(self):
         interval_seconds = 20
 
         while True:
             if self.dose_handler.current_dose_times:
-                currTime = datetime.now()
-                if currTime > self.dose_handler.current_dose_times[0]:
+                current_time = datetime.now()
+                if current_time > self.dose_handler.current_dose_times[0]:
                     try:
-                        timeRemove = (
+                        time_remove = (
                             self.dose_handler.current_dose_times[0]).strftime(
                                 self.time_format)
-                        toRemove = self.dtl_cur_list_src.find(
-                            {"subtitle": timeRemove})
-                        self.dtl_cur_list_src.remove(toRemove)
+                        to_remove = self.dtl_cur_list_src.find(
+                            {"subtitle": time_remove})
+                        self.dtl_cur_list_src.remove(to_remove)
                         del self.dose_handler.current_dose_times[0]
                     except Exception as e:
                         raise Exception(
@@ -224,27 +222,28 @@ class InMySystem(toga.App):
             await asyncio.sleep(interval_seconds)
 
 
-class doseDialog(toga.Window):
+class DoseDialog(toga.Window):
     """Pop-up dialog for getting the dose to add!"""
+    
     def __init__(self, dosageHandler):
         super().__init__(title="Add Dose", resizable=False, size=(400, 200))
-        self._doseHandler = dosageHandler
-        self.add_icon = toga.Icon(doseGenStatus.ADD.value)
+        self._dose_handler = dosageHandler
+        self.add_icon = toga.Icon(DoseIcons.ADD.value)
 
-        self.doseInfo = ListSource( 
+        self.dose_info_src = ListSource( 
             accessors=("icon","title","subtitle"),
             data=[]
         )
 
-        self.selection = toga.Selection(
+        self.selection_dose = toga.Selection(
             style=Pack(margin=5),
-            items = self._doseHandler.src_dose_names,
-            on_change=self.updateList
+            items = self._dose_handler.src_dose_names,
+            on_change=self.fill_dose_info
         )
 
-        self.doseInfoDtlList = toga.DetailedList(
+        self.dlt_dose_info = toga.DetailedList(
             style=Pack(margin=5),
-            data=self.doseInfo
+            data=self.dose_info_src
             )
         
         self.lbl_add_dose = toga.Label(
@@ -252,37 +251,37 @@ class doseDialog(toga.Window):
             text="Select a Dose"
         )
 
-        self.ok_button = toga.Button("Add Dose", on_press=self.on_accept,
+        self.btn_okay = toga.Button("Add Dose", on_press=self.on_accept,
             style=Pack(margin=5)
             )
         self.content = toga.Box(
             style=Pack(direction=COLUMN, flex=1, margin=5),
             children=[
                 self.lbl_add_dose,
-                self.selection,
-                self.doseInfoDtlList,
-                self.ok_button 
+                self.selection_dose,
+                self.dlt_dose_info,
+                self.btn_okay 
                 ]
             )
         self.future = self.app.loop.create_future()
-        self.updateList(self.selection)
+        self.fill_dose_info(self.selection_dose)
 
     def on_accept(self, widget, **kwargs):
-        self.future.set_result(self.selection.value)
+        self.future.set_result(self.selection_dose.value)
         self.close()
 
     def __await__(self):
         return self.future.__await__()
     
-    def updateList(self, widget):
-        nextDose = self.selection.value
-        detailedDose = copy.deepcopy(self._doseHandler.src_dose_all)
-        newDose = next(filter(
-            lambda v: v['Name'] == nextDose, detailedDose
+    def fill_dose_info(self, widget):
+        next_dose = self.selection_dose.value
+        detailed_dose = copy.deepcopy(self._dose_handler.src_dose_all)
+        new_dose = next(filter(
+            lambda v: v['Name'] == next_dose, detailed_dose
             ), None)
-        self.doseInfo.clear()
-        for key,item in newDose.items():
-            self.doseInfo.append({
+        self.dose_info_src.clear()
+        for key,item in new_dose.items():
+            self.dose_info_src.append({
                 "icon": self.add_icon,
                 "title": key,
                 "subtitle": item

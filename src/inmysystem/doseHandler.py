@@ -9,7 +9,7 @@ Put ALL data here!
 from inmysystem.dataRead import JsonFileHandler
 
 
-class doseHandler():
+class DoseHandler():
     def __init__(self, appPath):
         self._app_Path = appPath
         self.src_dose_all = []
@@ -18,44 +18,44 @@ class doseHandler():
         self.history_dose = []
         self.dose_file = "testInfo.json"
         self.history_file = "history.json"
-        self.JHandler = JsonFileHandler(self._app_Path)
+        self.json_handler = JsonFileHandler(self._app_Path)
 
-    def loadDoseFile(self):
-        temp_data = self.JHandler.read_dose_data(self.dose_file)
-
-        if (bool(temp_data)):
-            self._parseDoseInfo(temp_data)
-
-    def loadHistoryFile(self):
-        temp_data = self.JHandler.read_dose_data(self.history_file)
+    def load_dose_file(self):
+        temp_data = self.json_handler.read_dose_data(self.dose_file)
 
         if (bool(temp_data)):
-            self._parseHistory(temp_data)
+            self._parse_dose_info(temp_data)
 
-    def _parseDoseInfo(self, json_data):
+    def load_history_file(self):
+        temp_data = self.json_handler.read_dose_data(self.history_file)
+
+        if (bool(temp_data)):
+            self._parse_dose_history(temp_data)
+
+    def _parse_dose_info(self, json_data):
         if len(json_data) == 0: return
         
         for dosage in json_data:
             self.src_dose_all.append(dosage) 
             self.src_dose_names.append(dosage["Name"])
 
-    def _parseHistory(self, json_data):
+    def _parse_dose_history(self, json_data):
         if len(json_data) == 0: return
 
         for dosage in json_data:
             self.history_dose.append(dosage)
     
-    def addActiveTimeDose(self, new_dosage):
+    def add_active_time_dose(self, new_dosage):
         new_dose = new_dosage
         self.current_dose_times.append(new_dose)
         self.current_dose_times.sort()
 
-    def getActiveDose(self) -> list:
+    def get_active_dose(self) -> list:
         return self.current_dose_times
 
-    def writeHistory(self):
-        self.JHandler.write_dose_history(self.history_dose, self.history_file)
+    def write_to_history(self):
+        self.json_handler.write_dose_history(self.history_dose, self.history_file)
 
-    def clearFile(self, filename):
-        self.JHandler.truncate_file(file2truncate=filename)
+    def clear_file(self, filename):
+        self.json_handler.truncate_file(file2truncate=filename)
         
