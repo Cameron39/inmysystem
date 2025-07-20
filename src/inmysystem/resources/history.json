@@ -28,5 +28,15 @@
         "Name": "Jelly Bean",
         "Dose": "210mg",
         "Expire": "2025-07-19T22:52:16.464555"
+    },
+    {
+        "Name": "Ibuprofen",
+        "Dose": "200mg",
+        "Expire": "2025-07-20T17:35:48.997790"
+    },
+    {
+        "Name": "Ibuprofen",
+        "Dose": "200mg",
+        "Expire": "2025-07-20T17:35:57.761624"
     }
 ]
