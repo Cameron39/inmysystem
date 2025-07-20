@@ -122,7 +122,6 @@ class InMySystem(toga.App):
         dialog = doseDialog(self.dose_handler)
         dialog.show()
         result = await dialog
-        self.addNewDose(result)
         yes_continue = await self.checkIfDoseActive(result)
         if yes_continue:
             self.addNewDose(result)
