@@ -3,9 +3,14 @@
 ## Information
 Created for my CSC 470 Final Project
 
+This application allows the user to track doses that are active and 
+maintains a history of doses taken.
+
 ## Warning
 **This is a proof of concept application**
+
 **I am not a doctor and you should always consult your doctor before taking medications**
+
 Do not use this application instead of a doctor
 
 ## Notes
