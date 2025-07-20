@@ -126,6 +126,9 @@ class InMySystem(toga.App):
         self.main_box.add(self.dtl_dose_history)
         self.main_box.add(self.btn_clear)
         self.load_history_data()
+        #datachecking = self.check_dose_time
+        #asyncio.run(datachecking)
+        asyncio.Task(self.check_dose_time())
 
         self.main_window = toga.MainWindow(
             title=self.formal_name, size=(400,300))
@@ -167,9 +170,11 @@ class InMySystem(toga.App):
         dialog.show()
         result = await dialog
         yes_continue = await self.check_if_dose_is_active(result)
+        print(f"yes_continue: {yes_continue}")
         if yes_continue:
             self.add_new_dose(result)
-            await self.check_dose_time()
+            print("Right before call")
+            #await self.check_dose_time()
             
     def listsource_add(
             self, the_list_source : ListSource, 
@@ -195,6 +200,13 @@ class InMySystem(toga.App):
             "subtitle": new_time
         })
 
+    async def begin_checking(self):
+        await self.wtf()
+
+    async def wtf(self):
+        await self.check_dose_time()
+        asyncio.run(self.check_dose_time)
+
     def load_history_data(self):
         """
         Loads the history data into the corresponding list sources.
@@ -205,9 +217,13 @@ class InMySystem(toga.App):
             current_time = datetime.now()
             for dose in self.dose_handler.history_dose:
                 expire_time = datetime.fromisoformat(dose['Expire'])
+                #print(expire_time)
+                #print(dose['Expire'])
+                #self.dose_handler.add_active_time_dose(expire_time)
                 if current_time < expire_time:
                     self.listsource_add(self.dtl_cur_list_src, dose, 
-                        DoseIcons.ACTIVE)   
+                        DoseIcons.ACTIVE)
+                    self.dose_handler.add_active_time_dose(expire_time)   
                 self.listsource_add(self.dtl_hst_list_src, dose, 
                         DoseIcons.HISTORY)
 
@@ -275,12 +291,14 @@ class InMySystem(toga.App):
         Sleeps a predetermined number of seconds before checking again.
         Uses async to give control back when not checking.
         """
-
+        print("Spot 1")
         while True:
             if self.dose_handler.current_dose_times:
                 current_time = datetime.now()
+                print("Spot 2")
                 if current_time > self.dose_handler.current_dose_times[0]:
                     try:
+                        print("Checking")
                         time_remove = (
                             self.dose_handler.current_dose_times[0]).strftime(
                                 self.time_format)
@@ -292,6 +310,8 @@ class InMySystem(toga.App):
                         raise Exception(
                             f"Unexpected error while removing from \
                             activeList {e}")
+            else:
+                print("no active dose times")
             await asyncio.sleep(self._interval_seconds)
 
 

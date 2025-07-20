@@ -3,7 +3,7 @@
 project_name = "In My System"
 bundle = "com.example"
 version = "0.4"
-url = "https://example.com/inmysystem"
+url = "https://github.com/Cameron39"
 license.file = "LICENSE"
 author = "Cameron Pitcel"
 author_email = "cpitcel@uis.edu"

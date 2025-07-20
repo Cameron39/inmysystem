@@ -1,42 +1,27 @@
 [
     {
-        "Name": "Acetaminophen",
-        "Dose": "1000mg",
-        "Expire": "2025-07-20T01:53:57.266770"
-    },
-    {
         "Name": "Ibuprofen",
         "Dose": "200mg",
-        "Expire": "2025-07-20T00:18:36.346828"
-    },
-    {
-        "Name": "Ibuprofen",
-        "Dose": "200mg",
-        "Expire": "2025-07-20T02:15:46.798943"
+        "Expire": "2025-07-19T16:57:30.187397"
     },
     {
         "Name": "Diphenhydramine",
         "Dose": "200mg",
-        "Expire": "2025-07-20T02:15:49.824723"
+        "Expire": "2025-07-20T20:53:37.692961"
+    },
+    {
+        "Name": "Dextromethorphan",
+        "Dose": "20mg",
+        "Expire": "2025-07-19T20:53:42.261855"
     },
     {
         "Name": "Ibuprofen",
         "Dose": "200mg",
-        "Expire": "2025-07-20T02:15:53.830014"
+        "Expire": "2025-07-20T18:35:00.547966"
     },
     {
-        "Name": "Jelly Bean",
-        "Dose": "210mg",
-        "Expire": "2025-07-19T22:52:16.464555"
-    },
-    {
-        "Name": "Ibuprofen",
-        "Dose": "200mg",
-        "Expire": "2025-07-20T17:35:48.997790"
-    },
-    {
-        "Name": "Ibuprofen",
-        "Dose": "200mg",
-        "Expire": "2025-07-20T17:35:57.761624"
+        "Name": "Dextromethorphan",
+        "Dose": "20mg",
+        "Expire": "2025-07-20T21:00:46.981034"
     }
 ]
