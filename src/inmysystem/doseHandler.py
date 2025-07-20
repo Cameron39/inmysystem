@@ -7,7 +7,7 @@ Put ALL data here!
 """
 
 from inmysystem.dataRead import JsonFileHandler
-#from datetime import datetime, timedelta
+
 
 class doseHandler():
     def __init__(self, appPath):
@@ -44,15 +44,11 @@ class doseHandler():
 
         for dosage in json_data:
             self.history_dose.append(dosage)
-
-    # def getDetailDose(self) -> list:
-    #     return self.src_dose_all
     
     def addActiveTimeDose(self, new_dosage):
         new_dose = new_dosage
         self.current_dose_times.append(new_dose)
         self.current_dose_times.sort()
-        #print(f"Added Dose {newDose}")
 
     def getActiveDose(self) -> list:
         return self.current_dose_times
@@ -61,5 +57,5 @@ class doseHandler():
         self.JHandler.write_dose_history(self.history_dose, self.history_file)
 
     def clearFile(self, filename):
-        #print("Ready to Clear File!")
         self.JHandler.truncate_file(file2truncate=filename)
+        

@@ -4,7 +4,6 @@ Test Change
 """
 
 import toga
-# import toga.icons
 from toga.style import Pack
 from toga.style.pack import COLUMN, ROW, CENTER, Pack
 from toga import ImageView, Image, Selection
@@ -15,11 +14,15 @@ import asyncio
 from enum import Enum
 import copy
 
+
 class doseGenStatus(Enum):
     ACTIVE = 'resources/active.png'
     HISTORY = 'resources/history.png'
     ADD = 'resources/pilladd.png'
+
+
 class InMySystem(toga.App):
+
     def startup(self):
         """Construct and show the Toga application.
 
@@ -53,7 +56,7 @@ class InMySystem(toga.App):
         self.add_button = toga.Button(
             "Add New Dose",
             on_press= self.doseInput,
-            style=Pack(margin_top=1, margin_bottom=20, margin_left=20, margin_right=20),
+            style=Pack(margin_top=1, margin_bottom=20, margin_left=20, margin_right=20)
         )
 
         self.clear_history = toga.Button(
@@ -127,21 +130,20 @@ class InMySystem(toga.App):
             self.addNewDose(result)
             await self.checkTime()
             
-
     def addToListSource(self, the_list_source : ListSource, the_dict : dict, type: doseGenStatus):
-            try:
-                if isinstance(the_dict['Expire'], datetime):
-                    new_time = the_dict['Expire'].strftime(self.time_format)
-                else:
-                    new_time = datetime.fromisoformat(the_dict['Expire']).strftime(self.time_format)
-            except Exception as e:
-                raise Exception(f"Unexpected error extracting time: {e}")
-            
-            the_list_source.append({
-                "icon": toga.Icon(type.value),
-                "title": the_dict['Name'] + " - " + the_dict['Dose'],
-                "subtitle": new_time
-            })
+        try:
+            if isinstance(the_dict['Expire'], datetime):
+                new_time = the_dict['Expire'].strftime(self.time_format)
+            else:
+                new_time = datetime.fromisoformat(the_dict['Expire']).strftime(self.time_format)
+        except Exception as e:
+            raise Exception(f"Unexpected error extracting time: {e}")
+        
+        the_list_source.append({
+            "icon": toga.Icon(type.value),
+            "title": the_dict['Name'] + " - " + the_dict['Dose'],
+            "subtitle": new_time
+        })
 
     def loadHistoryData(self):
         if (bool(self.dose_handler.history_dose)):
@@ -187,15 +189,12 @@ class InMySystem(toga.App):
         })
 
         self.dose_handler.writeHistory()
-
         self.dose_handler.addActiveTimeDose(expire_time)
-
 
     async def checkTime(self):
         interval_seconds = 20
 
         while True:
-            #print("Checking...")
             if self.dose_handler.current_dose_times:
                 currTime = datetime.now()
                 if currTime > self.dose_handler.current_dose_times[0]:
@@ -208,10 +207,9 @@ class InMySystem(toga.App):
                         raise Exception(f"Unexpected error while removing from activeList {e}")
             await asyncio.sleep(interval_seconds)
 
-"""
-Pop-up dialog for getting the dose to add!
-"""
+
 class doseDialog(toga.Window):
+    """Pop-up dialog for getting the dose to add!"""
     def __init__(self, dosageHandler):
         super().__init__(title="Add Dose", resizable=False, size=(400, 200))
         self._doseHandler = dosageHandler
