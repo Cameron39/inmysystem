@@ -19,7 +19,7 @@ class DoseHandler():
         self.src_dose_names = []
         self.current_dose_times = []
         self.history_dose = []
-        self.dose_file = "testInfo.json"
+        self.dose_file = "doseinfo.json"
         self.history_file = "history.json"
         self.json_handler = JsonFileHandler(self._app_Path)
 

@@ -1,0 +1,72 @@
+[
+  {
+    "Name": "Ibuprofen",
+    "Nickname": "Motrin, Advil",
+    "Dose": "200mg",
+    "ActiveMinutes": "240",
+    "Notes": "Take with Food"
+  },
+  {
+    "Name": "Acetaminophen",
+    "Nickname": "Tylenol",
+    "Dose": "1000mg",
+    "ActiveMinutes": "360",
+    "Notes": "Take with Food"
+  },
+  {
+    "Name": "Diphenhydramine",
+    "Nickname": "Benadryl",
+    "Dose": "200mg",
+    "ActiveMinutes": "240",
+    "Notes": "May make you drowsey"
+  },
+  {
+    "Name": "Naproxen Sodium",
+    "Nickname": "Aleve",
+    "Dose": "220mg",
+    "ActiveMinutes": "360",
+    "Notes": "Take with Food"
+  },
+  {
+    "Name": "Aspirin",
+    "Nickname": "Bayer",
+    "Dose": "325mg",
+    "ActiveMinutes": "240",
+    "Notes": "Take with Food"
+  },
+  {
+    "Name": "Guaifenesin",
+    "Nickname": "Mucinex, Tussin, Robitussin",
+    "Dose": "200mg",
+    "ActiveMinutes": "240",
+    "Notes": "Drink extra fluids"
+  },
+  {
+    "Name": "Dextromethorphan",
+    "Nickname": "Delsym, Robitussin, Secrets",
+    "Dose": "20mg",
+    "ActiveMinutes": "240",
+    "Notes": "Drink extra fluids"
+  },
+  {
+    "Name": "Bismuth subsalicylat",
+    "Nickname": "Pepto-Bismol, Peptic",
+    "Dose": "524mg",
+    "ActiveMinutes": "60",
+    "Notes": "Shake liquid forumulations well"
+  },
+  {
+    "Name": "Calcium Carbonate",
+    "Nickname": "Antacid, Tums",
+    "Dose": "200mg",
+    "ActiveMinutes": "360",
+    "Notes": "Dosing may vary"
+  },
+  {
+    "Name": "Loperamide",
+    "Nickname": "Imodium, Diamode",
+    "Dose": "4mg",
+    "ActiveMinutes": "480",
+    "Notes": "Drink extra fluids"
+  }
+]
