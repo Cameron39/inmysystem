@@ -1,17 +1,18 @@
 """
-Structure of Dosage
-
-Handling of Dose
-
-Put ALL data here!
-TODO
+This is the logic layer that handles the manipulation of the core data.
+It is used to separate the GUI layer and the file manipulation layer.
 """
 
 from inmysystem.dataRead import JsonFileHandler
 
 
 class DoseHandler():
-    """TODO"""
+    """
+    Handles the core data storage, loading from file, writing to file, and data
+        clearing.
+    Parses the loaded data into the core data storage for dose and history.
+    """
+
     def __init__(self, appPath):
         self._app_Path = appPath
         self.src_dose_all = []
