@@ -60,6 +60,7 @@ class InMySystem(toga.App):
         self.dose_handler = DoseHandler(self.paths)
         self.dose_handler.load_dose_file()
         self.dose_handler.load_history_file()
+        self._interval_seconds = 20
         
         self.dtl_cur_list_src = ListSource(
             accessors=("icon","title","subtitle"),
@@ -275,8 +276,6 @@ class InMySystem(toga.App):
         Uses async to give control back when not checking.
         """
 
-        interval_seconds = 20
-
         while True:
             if self.dose_handler.current_dose_times:
                 current_time = datetime.now()
@@ -293,7 +292,7 @@ class InMySystem(toga.App):
                         raise Exception(
                             f"Unexpected error while removing from \
                             activeList {e}")
-            await asyncio.sleep(interval_seconds)
+            await asyncio.sleep(self._interval_seconds)
 
 
 class DoseDialog(toga.Window):
