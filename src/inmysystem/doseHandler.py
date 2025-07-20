@@ -53,9 +53,6 @@ class DoseHandler():
         self.current_dose_times.append(new_dose)
         self.current_dose_times.sort()
 
-    def get_active_dose(self) -> list:
-        return self.current_dose_times
-
     def write_to_history(self):
         self.json_handler.write_dose_history(self.history_dose, self.history_file)
 
