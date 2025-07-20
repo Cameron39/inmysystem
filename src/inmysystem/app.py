@@ -56,14 +56,16 @@ class InMySystem(toga.App):
         self.add_button = toga.Button(
             "Add New Dose",
             on_press= self.doseInput,
-            style=Pack(margin_top=1, margin_bottom=20, margin_left=20, margin_right=20)
+            style=Pack(
+                margin_top=1, margin_bottom=20, margin_left=20, margin_right=20)
         )
 
         self.clear_history = toga.Button(
             "Clear All Data",
             id="clear_all",
             on_press=self.clear_all,
-            style=Pack(margin_top=1, margin_bottom=5, margin_left=20, margin_right=20)
+            style=Pack(
+                margin_top=1, margin_bottom=5, margin_left=20, margin_right=20)
         )
         
         self.dose_history = toga.DetailedList(
@@ -98,7 +100,8 @@ class InMySystem(toga.App):
         self.main_box.add(self.clear_history)
         self.loadHistoryData()
 
-        self.main_window = toga.MainWindow(title=self.formal_name, size=(400,300))
+        self.main_window = toga.MainWindow(
+            title=self.formal_name, size=(400,300))
         self.main_window.content = self.main_box
         self.main_window.show()
 
@@ -128,12 +131,15 @@ class InMySystem(toga.App):
             self.addNewDose(result)
             await self.checkTime()
             
-    def addToListSource(self, the_list_source : ListSource, the_dict : dict, type: doseGenStatus):
+    def addToListSource(
+            self, the_list_source : ListSource, 
+            the_dict : dict, type: doseGenStatus):
         try:
             if isinstance(the_dict['Expire'], datetime):
                 new_time = the_dict['Expire'].strftime(self.time_format)
             else:
-                new_time = datetime.fromisoformat(the_dict['Expire']).strftime(self.time_format)
+                new_time = datetime.fromisoformat(the_dict['Expire']).strftime(
+                    self.time_format)
         except Exception as e:
             raise Exception(f"Unexpected error extracting time: {e}")
         
@@ -149,11 +155,14 @@ class InMySystem(toga.App):
             for dose in self.dose_handler.history_dose:
                 expire_time = datetime.fromisoformat(dose['Expire'])
                 if current_time < expire_time:
-                    self.addToListSource(self.dtl_cur_list_src, dose, doseGenStatus.ACTIVE)   
-                self.addToListSource(self.dtl_hst_list_src, dose, doseGenStatus.HISTORY)
+                    self.addToListSource(self.dtl_cur_list_src, dose, 
+                        doseGenStatus.ACTIVE)   
+                self.addToListSource(self.dtl_hst_list_src, dose, 
+                        doseGenStatus.HISTORY)
 
     async def checkIfDoseActive(self, new_dose_name : str) -> bool:
-        temp_find = (' '.join([str(s) for s in self.dtl_cur_list_src])).find(new_dose_name)
+        temp_find = (' '.join([str(s) for s in self.dtl_cur_list_src])).find(
+            new_dose_name)
 
         if temp_find == -1:
             return True
@@ -170,15 +179,19 @@ class InMySystem(toga.App):
     
     def addNewDose(self, nextDose):
         detailed_dose = copy.deepcopy(self.dose_handler.src_dose_all)
-        new_dose = next(filter(lambda v: v['Name'] == nextDose, detailed_dose), None)
+        new_dose = next(filter(
+            lambda v: v['Name'] == nextDose, detailed_dose
+            ), None)
         active_min = (float)(new_dose['ActiveMinutes'])
         current_time = datetime.now()
         expire_time = current_time + timedelta(minutes=active_min)
 
         new_dose['Expire'] = expire_time
 
-        self.addToListSource(self.dtl_cur_list_src, new_dose, doseGenStatus.ACTIVE)
-        self.addToListSource(self.dtl_hst_list_src, new_dose, doseGenStatus.HISTORY)
+        self.addToListSource(self.dtl_cur_list_src, new_dose, 
+            doseGenStatus.ACTIVE)
+        self.addToListSource(self.dtl_hst_list_src, new_dose, 
+            doseGenStatus.HISTORY)
 
         self.dose_handler.history_dose.append({
             "Name": new_dose['Name'],
@@ -197,12 +210,17 @@ class InMySystem(toga.App):
                 currTime = datetime.now()
                 if currTime > self.dose_handler.current_dose_times[0]:
                     try:
-                        timeRemove = (self.dose_handler.current_dose_times[0]).strftime(self.time_format)
-                        toRemove = self.dtl_cur_list_src.find({"subtitle": timeRemove})
+                        timeRemove = (
+                            self.dose_handler.current_dose_times[0]).strftime(
+                                self.time_format)
+                        toRemove = self.dtl_cur_list_src.find(
+                            {"subtitle": timeRemove})
                         self.dtl_cur_list_src.remove(toRemove)
                         del self.dose_handler.current_dose_times[0]
                     except Exception as e:
-                        raise Exception(f"Unexpected error while removing from activeList {e}")
+                        raise Exception(
+                            f"Unexpected error while removing from \
+                            activeList {e}")
             await asyncio.sleep(interval_seconds)
 
 
@@ -259,7 +277,9 @@ class doseDialog(toga.Window):
     def updateList(self, widget):
         nextDose = self.selection.value
         detailedDose = copy.deepcopy(self._doseHandler.src_dose_all)
-        newDose = next(filter(lambda v: v['Name'] == nextDose, detailedDose), None)
+        newDose = next(filter(
+            lambda v: v['Name'] == nextDose, detailedDose
+            ), None)
         self.doseInfo.clear()
         for key,item in newDose.items():
             self.doseInfo.append({
