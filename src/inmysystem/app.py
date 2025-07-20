@@ -60,9 +60,9 @@ class InMySystem(toga.App):
         )
 
         self.clear_history = toga.Button(
-            "Clear All History",
-            id="clear_history",
-            on_press=self.clear_file,
+            "Clear All Data",
+            id="clear_all",
+            on_press=self.clear_all,
             style=Pack(margin_top=1, margin_bottom=5, margin_left=20, margin_right=20)
         )
         
@@ -101,20 +101,18 @@ class InMySystem(toga.App):
         self.main_window = toga.MainWindow(title=self.formal_name, size=(400,300))
         self.main_window.content = self.main_box
         self.main_window.show()
-        
-    def btn_testing(self, widget):
-        pass
 
-    async def clear_file(self, widget):
+    async def clear_all(self, widget):
         user_answer = toga.ConfirmDialog("Please Confirm",
-            "Please confirm you want the history file emptied")
+            "Please confirm you want ALL DATA removed")
         message = ""
 
         if await self.main_window.dialog(user_answer):
-            if widget.id == "clear_history": 
+            if widget.id == "clear_all": 
                 self.dose_handler.clearFile(self.dose_handler.history_file)
                 message = "Completed"
                 self.dtl_hst_list_src.clear()
+                self.dtl_cur_list_src.clear()
         else:
             message = "Aborted"
             
