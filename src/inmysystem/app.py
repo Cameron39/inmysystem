@@ -13,6 +13,7 @@ from inmysystem.doseHandler import doseHandler
 from datetime import datetime, timedelta
 import asyncio
 from enum import Enum
+import copy
 
 class doseGenStatus(Enum):
     ACTIVE = 'resources/active.png'
@@ -122,7 +123,12 @@ class InMySystem(toga.App):
         dialog.show()
         result = await dialog
         self.addNewDose(result)
-        await self.checkTime()
+        return
+        yes_continue = await self.checkIfDoseActive(result)
+        if yes_continue:
+            self.addNewDose(result)
+            await self.checkTime()
+            
 
     def addToListSource(self, the_list_source : ListSource, the_dict : dict, type: doseGenStatus):
             try:
@@ -149,27 +155,31 @@ class InMySystem(toga.App):
                 else:
                     self.addToListSource(self.dtl_cur_list_src, dose, doseGenStatus.ACTIVE)
 
-    def checkIfDoseActive(self, newDose : dict):
-        #detailedDose = self.dose_handler.src_dose_all
-        #actDose = next(filter(lambda v: (v['Name'] + " - " + v['Dose']) == newDose, detailedDose), None)
-        #print(f"Inside: {actDose}")
-        # temp_row = self.dtl_cur_list_src.find(
-        #     ("title='" + newDose['Name'] + " - " + newDose['Dose'] + "'")
-        #     )
-        print(f"Did we find something? {self.dtl_cur_list_src.__getitem__(4)}")
-        temp = (' '.join([str(s) for s in self.dtl_cur_list_src])).find(newDose['Name'])
-        print(temp)
+    async def checkIfDoseActive(self, new_dose_name : str) -> bool:
+        temp_find = (' '.join([str(s) for s in self.dtl_cur_list_src])).find(new_dose_name)
+
+        if temp_find == -1:
+            return True
+        else:
+            user_answer = toga.ConfirmDialog(
+                title="Warning!",
+                message="Dose already in your system!\n" \
+                "Are you SURE?"
+            )
+            if await self.dialog(user_answer):
+                return True
+            else:
+                return False
     
     def addNewDose(self, nextDose):
-        detailed_dose = self.dose_handler.src_dose_all
+        detailed_dose = copy.deepcopy(self.dose_handler.src_dose_all)
         new_dose = next(filter(lambda v: v['Name'] == nextDose, detailed_dose), None)
         active_min = (float)(new_dose['ActiveMinutes'])
         current_time = datetime.now()
         expire_time = current_time + timedelta(minutes=active_min)
 
-        self.checkIfDoseActive(new_dose)
-
         new_dose['Expire'] = expire_time
+
         self.addToListSource(self.dtl_cur_list_src, new_dose, doseGenStatus.ACTIVE)
         self.addToListSource(self.dtl_hst_list_src, new_dose, doseGenStatus.HISTORY)
 
@@ -178,22 +188,23 @@ class InMySystem(toga.App):
             "Dose": new_dose['Dose'],
             "Expire": expire_time.isoformat()
         })
+
         self.dose_handler.writeHistory()
+
         self.dose_handler.addActiveTimeDose(expire_time)
+
 
     async def checkTime(self):
         interval_seconds = 20
 
         while True:
-            print("Checking...")
+            #print("Checking...")
             if self.dose_handler.current_dose_times:
                 currTime = datetime.now()
                 if currTime > self.dose_handler.current_dose_times[0]:
                     try:
                         timeRemove = (self.dose_handler.current_dose_times[0]).strftime(self.time_format)
                         toRemove = self.dtl_cur_list_src.find({"subtitle": timeRemove})
-                        toRemInd = self.dtl_cur_list_src.index(toRemove)
-                        #to_history = self.dtl_cur_list_src.__getitem__(toRemInd)
                         self.dtl_cur_list_src.remove(toRemove)
                         del self.dose_handler.current_dose_times[0]
                     except Exception as e:
@@ -248,8 +259,10 @@ class doseDialog(toga.Window):
     
     def updateList(self, widget):
         nextDose = self.selection.value
-        detailedDose = self._doseHandler.src_dose_all
+        detailedDose = copy.deepcopy(self._doseHandler.src_dose_all)
+        print(detailedDose)
         newDose = next(filter(lambda v: v['Name'] == nextDose, detailedDose), None)
+        print(newDose)
         self.doseInfo.clear()
         for key,item in newDose.items():
             self.doseInfo.append({

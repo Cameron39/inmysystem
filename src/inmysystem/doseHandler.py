@@ -45,8 +45,8 @@ class doseHandler():
         for dosage in json_data:
             self.history_dose.append(dosage)
 
-    def getDetailDose(self) -> list:
-        return self.src_dose_all
+    # def getDetailDose(self) -> list:
+    #     return self.src_dose_all
     
     def addActiveTimeDose(self, new_dosage):
         new_dose = new_dosage
