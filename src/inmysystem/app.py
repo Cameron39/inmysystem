@@ -228,6 +228,11 @@ class doseDialog(toga.Window):
             style=Pack(margin=5),
             data=self.doseInfo
             )
+        
+        self.lbl_add_dose = toga.Label(
+            style=Pack(margin=5),
+            text="Select a Dose"
+        )
 
         self.ok_button = toga.Button("Add Dose", on_press=self.on_accept,
             style=Pack(margin=5)
@@ -235,6 +240,7 @@ class doseDialog(toga.Window):
         self.content = toga.Box(
             style=Pack(direction=COLUMN, flex=1, margin=5),
             children=[
+                self.lbl_add_dose,
                 self.selection,
                 self.doseInfoDtlList,
                 self.ok_button, 
