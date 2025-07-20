@@ -1,9 +1,18 @@
+"""
+Handles reading and writing the dose and history information from JSON files.
+"""
+
 import json
 import pprint
 
 
 class JsonFileHandler:
-
+    """
+    Loads JSON data from the dose and history files.
+    Uses try...except blocks to trap exceptions.
+    Uses the Toga path methods so it could work in other platforms.
+    """
+    
     def __init__(self, app_paths):
         self._app_paths = app_paths
         self._json_data = jsonData = ""
@@ -21,9 +30,11 @@ class JsonFileHandler:
             self._json_data = json.loads(json_text)
             return self._json_data     
         except json.JSONDecodeError:
-            raise json.JSONDecoder(f"Error with JSON decoding: {file_with_path}")
+            raise json.JSONDecoder(
+                f"Error with JSON decoding: {file_with_path}")
         except Exception as e:
-            raise Exception(f"Unexpected error while reading {file_with_path}: {e}")
+            raise Exception(
+                f"Unexpected error while reading {file_with_path}: {e}")
 
     def write_dose_history(self, dose_history, file2Write):
         file_with_path = self._app_paths.app / "resources" / file2Write
@@ -32,14 +43,16 @@ class JsonFileHandler:
             history_json = json.dumps(dose_history, indent=4)
             file_with_path.write_text(history_json)
         except Exception as e:
-            raise Exception(f"Unexpected error while writing to {file_with_path}: {e}")
+            raise Exception(
+                f"Unexpected error while writing to {file_with_path}: {e}")
         
     def truncate_file(self, file2truncate : str):
         file_with_path = self._app_paths.app / "resources" / file2truncate
         try:
             file_with_path.write_text("", encoding="utf-8")
         except Exception as e:
-            raise Exception(f"Unexpected error while trunating {file_with_path}: {e}")
+            raise Exception(
+                f"Unexpected error while trunating {file_with_path}: {e}")
 
     def makeJSONPretty(self, jsonData: dict) ->str:
         return pprint.pformat(jsonData, sort_dicts=False)
